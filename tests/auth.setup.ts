@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { getOtpFromEmail } from '../utils/emailOtpReader';
 
-test('user should login successfully using email OTP', async ({ page }) => {
+test('TC001_user should login successfully using email OTP', async ({ page }) => {
   test.setTimeout(90000);
 
   await page.goto('https://qa.msupport.mone.am/login', {
@@ -26,4 +26,7 @@ test('user should login successfully using email OTP', async ({ page }) => {
   await page.keyboard.type(otp.toString());
 
   await expect(page).toHaveURL(/dashboard\/organizations/);
+
+  await page.context().storageState({ path: 'auth.json' });
+
 });
