@@ -40,7 +40,7 @@ test.describe.serial('Organization CRUD flow', () => {
 
     await expect(page.getByText(orgName)).toBeVisible();
 
-    console.log('Viewed successfully');
+    console.log('Organization Viewed successfully');
 
     // ================= EDIT =================
     await page.goto('https://qa.msupport.mone.am/dashboard/organizations');
@@ -56,7 +56,7 @@ test.describe.serial('Organization CRUD flow', () => {
 
     await expect(page.getByText(updatedOrgName)).toBeVisible();
 
-    console.log('Edited successfully');
+    console.log('Organization Edited successfully');
 
     // ================= DELETE =================
     const deleteRow = page.locator('tr', { hasText: updatedOrgName });
@@ -69,7 +69,7 @@ test.describe.serial('Organization CRUD flow', () => {
 
     // await expect(page.getByText(updatedOrgName)).not.toBeVisible();
 
-    console.log('Deleted successfully');
+    console.log('Organization Deleted successfully');
 
   });
 
