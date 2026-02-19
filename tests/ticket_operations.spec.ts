@@ -1,15 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { time } from 'node:console';
 
 test.describe.serial('Ticket CRUD flow', () => {
 
-    test('TC_CRUD_Add_View_Edit_Delete Ticket', async ({ page }) => {
+    test('TC003_CRUD_Add_View_Edit_Delete Ticket', async ({ page }) => {
 
         // ================= DEFINE TEST DATA =================
         const ticketName = `Test Ticket ${Date.now()}`;
         const updatedTicketName = `${ticketName} Updated`;
 
         // ================= ADD =================
-        await page.goto('https://qa.msupport.mone.am/dashboard/tickets');
+        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
 
         await expect(page.getByText('Add a Ticket')).toBeVisible({ timeout: 15000 });
         await page.getByText('Add a Ticket').click();
@@ -31,7 +32,7 @@ test.describe.serial('Ticket CRUD flow', () => {
         console.log('Ticket added successfully');
 
         // ================= VIEW =================
-        await page.goto('https://qa.msupport.mone.am/dashboard/tickets');
+        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
         const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
         await searchInput.clear();
         await searchInput.fill(ticketName);
@@ -41,6 +42,7 @@ test.describe.serial('Ticket CRUD flow', () => {
         console.log('Ticket viewed successfully (ticket:', ticketName, ')');
 
         // ================= EDIT =================
+        await page.waitForTimeout(5000);
         await ticketRow.getByRole('button', { name: 'Open menu' }).click();
         await page.getByRole('menuitem', { name: 'Edit Ticket' }).click();
 
@@ -74,3 +76,7 @@ test.describe.serial('Ticket CRUD flow', () => {
 
     });
 });
+
+function timeout(arg0: number) {
+    throw new Error('Function not implemented.');
+}
