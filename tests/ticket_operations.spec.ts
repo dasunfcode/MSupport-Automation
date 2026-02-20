@@ -43,7 +43,7 @@ test.describe.serial('Ticket CRUD flow', () => {
 
         // ================= EDIT =================
         // await page.waitForTimeout(5000);
-        // await ticketRow.getByRole('button', { name: 'Open menu' }).click();
+        await ticketRow.getByRole('button', { name: 'Open menu' }).click();
         await ticketRow.getByRole('button', { name: 'Open menu' }).click();
 
         await page.getByRole('menuitem', { name: 'Edit Ticket' }).click();
