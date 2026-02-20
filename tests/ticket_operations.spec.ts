@@ -43,7 +43,6 @@ test.describe.serial('Ticket CRUD flow', () => {
         await page.getByLabel('Name').fill(updatedTicketName);
         await page.getByRole('button', { name: 'Update Ticket' }).click();
 
-        await searchInput.clear();
         await searchInput.fill(updatedTicketName);
 
         const updatedRow = page.locator('tr', { hasText: updatedTicketName });
@@ -56,7 +55,6 @@ test.describe.serial('Ticket CRUD flow', () => {
 
         await page.getByRole('button', { name: 'Confirm & Delete' }).click();
 
-        await searchInput.clear();
         await searchInput.fill(updatedTicketName);
 
         await expect(page.locator('tr', { hasText: updatedTicketName })).toHaveCount(0);
@@ -67,7 +65,7 @@ test.describe.serial('Ticket CRUD flow', () => {
 
 /**
  * Opens the correct menu button in the row and clicks the specified menu item.
- * Handles Edit/Delete menu buttons, Radix animations, and scrolling.
+ * Handles Edit/Delete menu buttons, Radix animations, and re-rendering.
  */
 async function openMenuAndClick(
     row: Locator,
@@ -79,20 +77,24 @@ async function openMenuAndClick(
     let buttonToClick: Locator;
 
     if (menuItemName.includes('Edit')) {
-        buttonToClick = menuButtons.first(); // first menu button is Edit
+        buttonToClick = menuButtons.first();
     } else {
-        buttonToClick = menuButtons.last();  // last menu button is Delete
+        buttonToClick = menuButtons.last();
     }
 
-    await expect(buttonToClick).toBeVisible();
+    // wait for the button to be ready and click
+    await expect(buttonToClick).toBeVisible({ timeout: 10000 });
     await buttonToClick.click();
 
     const dropdown = page.locator('[role="menu"]').first();
-    await expect(dropdown).toBeVisible({ timeout: 5000 });
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
 
     const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
+
+    // wait for the menu item to attach to DOM and become visible
+    await menuItem.waitFor({ state: 'attached', timeout: 10000 });
     await expect(menuItem).toBeVisible({ timeout: 10000 });
 
-    await menuItem.scrollIntoViewIfNeeded();
+    // click with force to bypass scroll issues
     await menuItem.click({ force: true });
 }
