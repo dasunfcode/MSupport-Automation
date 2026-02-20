@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test';
 test.describe.serial('Logs Page Tests', () => {
 
   test.beforeEach(async ({ page }) => {
-    // Navigate to Logs page before each test
     await page.goto(`${process.env.BASE_URL}/dashboard/logs`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('table tbody tr');
     console.log('Navigated to Logs page');

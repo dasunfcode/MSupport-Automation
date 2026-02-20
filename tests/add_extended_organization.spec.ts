@@ -1,21 +1,16 @@
 import { test, expect } from '@playwright/test';
 
 test.describe.serial('Organization CRUD flow', () => {
-
   const timestamp = Date.now();
-
-  const orgName = `Test Organization ${timestamp}`;
-  const updatedOrgName = `${orgName} Updated`;
+  let orgName = `Test Organization ${timestamp}`;
+  let updatedOrgName = `${orgName} Updated`;
   const email = `test+${timestamp}@gmail.com`;
   const phone = Math.floor(1000000000 + Math.random() * 9000000000).toString();
 
-  test('TC002_CRUD_Add_View_Edit_Delete_Organization', async ({ page }) => {
-
+  test('Add Organization', async ({ page }) => {
     await page.goto(`${process.env.BASE_URL}/dashboard/organizations`);
 
-    // ================= ADD =================
     await page.getByRole('button', { name: 'Add New Organization' }).click();
-
     await page.getByRole('dialog').waitFor();
 
     await page.getByText('Extended Service Partner Organization').click();
@@ -30,8 +25,11 @@ test.describe.serial('Organization CRUD flow', () => {
     await page.getByText('Add Organization').click();
 
     console.log('Organization added:', orgName);
+  });
 
-    // ================= VIEW =================
+  test('View Organization', async ({ page }) => {
+    await page.goto(`${process.env.BASE_URL}/dashboard/organizations`);
+
     const row = page.locator('tr', { hasText: orgName });
     await expect(row).toBeVisible();
 
@@ -39,10 +37,10 @@ test.describe.serial('Organization CRUD flow', () => {
     await page.getByText('View').click();
 
     await expect(page.getByText(orgName)).toBeVisible();
+    console.log('Organization viewed successfully');
+  });
 
-    console.log('Organization Viewed successfully');
-
-    // ================= EDIT =================
+  test('Edit Organization', async ({ page }) => {
     await page.goto(`${process.env.BASE_URL}/dashboard/organizations`);
 
     const editRow = page.locator('tr', { hasText: orgName });
@@ -55,10 +53,12 @@ test.describe.serial('Organization CRUD flow', () => {
     await page.getByText('Update Organization').click();
 
     await expect(page.getByText(updatedOrgName)).toBeVisible();
+    console.log('Organization edited successfully');
+  });
 
-    console.log('Organization Edited successfully');
+  test('Delete Organization', async ({ page }) => {
+    await page.goto(`${process.env.BASE_URL}/dashboard/organizations`);
 
-    // ================= DELETE =================
     const deleteRow = page.locator('tr', { hasText: updatedOrgName });
     await expect(deleteRow).toBeVisible();
 
@@ -67,10 +67,9 @@ test.describe.serial('Organization CRUD flow', () => {
 
     await page.getByText('Confirm & Deactivate').click();
 
-    // await expect(page.getByText(updatedOrgName)).not.toBeVisible();
+    // Optionally verify it is gone
+    // await expect(page.locator('tr', { hasText: updatedOrgName })).toHaveCount(0);
 
-    console.log('Organization Deleted successfully');
-
+    console.log('Organization deleted successfully');
   });
-
 });

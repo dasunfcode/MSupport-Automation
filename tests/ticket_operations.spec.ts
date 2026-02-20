@@ -1,13 +1,33 @@
 import { test, expect, Page, Locator } from '@playwright/test';
 
+// Helper function stays the same
+async function openMenuAndClick(row: Locator, page: Page, menuItemName: string) {
+    const menuButtons = row.getByRole('button', { name: 'Open menu' });
+    const buttonToClick = menuItemName.includes('Edit') ? menuButtons.first() : menuButtons.last();
+
+    await expect(buttonToClick).toBeVisible({ timeout: 10000 });
+    await buttonToClick.click();
+
+    const dropdown = page.locator('[role="menu"]').first();
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
+
+    const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
+    await menuItem.waitFor({ state: 'attached', timeout: 10000 });
+    await expect(menuItem).toBeVisible({ timeout: 10000 });
+    await menuItem.click({ force: true });
+}
+
+// Generate unique ticket name for each test run
+function generateTicketName() {
+    return `Test Ticket ${Date.now()}`;
+}
+
 test.describe.serial('Ticket CRUD flow', () => {
+    let ticketName: string;
+    let updatedTicketName: string;
 
-    test('TC003_CRUD_Add_View_Edit_Delete Ticket', async ({ page }) => {
-
-        const ticketName = `Test Ticket ${Date.now()}`;
-        const updatedTicketName = `${ticketName} Updated`;
-
-        // ================= ADD =================
+    test('Add Ticket', async ({ page }) => {
+        ticketName = generateTicketName();
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
 
         await page.getByText('Add a Ticket').click();
@@ -26,75 +46,48 @@ test.describe.serial('Ticket CRUD flow', () => {
         await page.getByRole('button', { name: 'Create Ticket' }).click();
 
         console.log('Ticket added');
+    });
 
-        // ================= VIEW =================
+    test('View Ticket', async ({ page }) => {
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
         const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
         await searchInput.fill(ticketName);
 
         const ticketRow = page.locator('tr', { hasText: ticketName });
         await expect(ticketRow).toBeVisible();
-
         console.log('Ticket viewed');
+    });
 
-        // ================= EDIT =================
+    test('Edit Ticket', async ({ page }) => {
+        updatedTicketName = `${ticketName} Updated`;
+        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+        await searchInput.fill(ticketName);
+
+        const ticketRow = page.locator('tr', { hasText: ticketName });
         await openMenuAndClick(ticketRow, page, 'Edit Ticket');
 
         await page.getByLabel('Name').fill(updatedTicketName);
         await page.getByRole('button', { name: 'Update Ticket' }).click();
 
         await searchInput.fill(updatedTicketName);
-
         const updatedRow = page.locator('tr', { hasText: updatedTicketName });
         await expect(updatedRow).toBeVisible();
-
         console.log('Ticket edited');
+    });
 
-        // ================= DELETE =================
-        await openMenuAndClick(updatedRow, page, 'Delete Ticket');
+    test('Delete Ticket', async ({ page }) => {
+        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+        await searchInput.fill(updatedTicketName);
+
+        const ticketRow = page.locator('tr', { hasText: updatedTicketName });
+        await openMenuAndClick(ticketRow, page, 'Delete Ticket');
 
         await page.getByRole('button', { name: 'Confirm & Delete' }).click();
-
         await searchInput.fill(updatedTicketName);
 
         await expect(page.locator('tr', { hasText: updatedTicketName })).toHaveCount(0);
-
         console.log('Ticket deleted');
     });
 });
-
-/**
- * Opens the correct menu button in the row and clicks the specified menu item.
- * Handles Edit/Delete menu buttons, Radix animations, and re-rendering.
- */
-async function openMenuAndClick(
-    row: Locator,
-    page: Page,
-    menuItemName: string
-): Promise<void> {
-
-    const menuButtons = row.getByRole('button', { name: 'Open menu' });
-    let buttonToClick: Locator;
-
-    if (menuItemName.includes('Edit')) {
-        buttonToClick = menuButtons.first();
-    } else {
-        buttonToClick = menuButtons.last();
-    }
-
-    // wait for the button to be ready and click
-    await expect(buttonToClick).toBeVisible({ timeout: 10000 });
-    await buttonToClick.click();
-
-    const dropdown = page.locator('[role="menu"]').first();
-    await expect(dropdown).toBeVisible({ timeout: 10000 });
-
-    const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
-
-    // wait for the menu item to attach to DOM and become visible
-    await menuItem.waitFor({ state: 'attached', timeout: 10000 });
-    await expect(menuItem).toBeVisible({ timeout: 10000 });
-
-    // click with force to bypass scroll issues
-    await menuItem.click({ force: true });
-}
