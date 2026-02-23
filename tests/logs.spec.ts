@@ -8,7 +8,7 @@ test.describe.serial('Logs Page Tests', () => {
     console.log('Navigated to Logs page');
   });
 
-  test('TC004_Should_display_all_log_tabs', async ({ page }) => {
+  test('MSUP-LOGS-TC012_Should_display_all_log_tabs', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Organizations' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'users' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Assets' })).toBeVisible();

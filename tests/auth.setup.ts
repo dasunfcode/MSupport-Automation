@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-test('TC001_user should login successfully using email OTP', async ({ page }) => {
+test('MSUP-AUTH-TC001_user should login successfully using email OTP', async ({ page }) => {
   test.setTimeout(90000);
 
   await page.goto(`${process.env.BASE_URL}/login`, {

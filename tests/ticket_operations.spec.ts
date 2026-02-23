@@ -26,7 +26,7 @@ test.describe.serial('Ticket CRUD flow', () => {
     let ticketName: string;
     let updatedTicketName: string;
 
-    test('Add Ticket', async ({ page }) => {
+    test('MSUP-TICKET-TC007_Add Ticket', async ({ page }) => {
         ticketName = generateTicketName();
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
 
@@ -48,7 +48,19 @@ test.describe.serial('Ticket CRUD flow', () => {
         console.log('Ticket added');
     });
 
-    test('View Ticket', async ({ page }) => {
+    test('MSUP-TICKET-TC008_Search Ticket', async ({ page }) => {
+        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+
+        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+        await searchInput.fill(ticketName);
+
+        const ticketRow = page.locator('tr', { hasText: ticketName });
+        await expect(ticketRow).toBeVisible();
+
+        console.log('Ticket search successful');
+    });
+
+    test('MSUP-TICKET-TC009_View Ticket', async ({ page }) => {
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
         const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
         await searchInput.fill(ticketName);
@@ -58,7 +70,7 @@ test.describe.serial('Ticket CRUD flow', () => {
         console.log('Ticket viewed');
     });
 
-    test('Edit Ticket', async ({ page }) => {
+    test('MSUP-TICKET-TC010_Edit Ticket', async ({ page }) => {
         updatedTicketName = `${ticketName} Updated`;
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
         const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
@@ -76,7 +88,7 @@ test.describe.serial('Ticket CRUD flow', () => {
         console.log('Ticket edited');
     });
 
-    test('Delete Ticket', async ({ page }) => {
+    test('MSUP-TICKET-TC011_Delete Ticket', async ({ page }) => {
         await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
         const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
         await searchInput.fill(updatedTicketName);
