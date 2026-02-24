@@ -4,6 +4,10 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30 * 1000,
 
+  // Run tests sequentially
+  fullyParallel: false,
+  workers: 1,
+
   use: {
     headless: false, // set true for CI/CD
     viewport: { width: 1280, height: 720 },

@@ -1,105 +1,109 @@
 import { test, expect, Page, Locator } from '@playwright/test';
 
-// Helper function stays the same
 async function openMenuAndClick(row: Locator, page: Page, menuItemName: string) {
-    const menuButtons = row.getByRole('button', { name: 'Open menu' });
-    const buttonToClick = menuItemName.includes('Edit') ? menuButtons.first() : menuButtons.last();
 
-    await expect(buttonToClick).toBeVisible({ timeout: 10000 });
-    await buttonToClick.click();
+  const menuButton = row.getByRole('button', { name: 'Open menu' }).first();
 
-    const dropdown = page.locator('[role="menu"]').first();
-    await expect(dropdown).toBeVisible({ timeout: 10000 });
+  console.log(`Clicking Open menu for "${menuItemName}"`);
+  await expect(menuButton).toBeVisible({ timeout: 10000 });
+  await menuButton.click();
 
-    const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
-    await menuItem.waitFor({ state: 'attached', timeout: 10000 });
-    await expect(menuItem).toBeVisible({ timeout: 10000 });
-    await menuItem.click({ force: true });
+  const dropdown = page.locator('[role="menu"]').first();
+  await expect(dropdown).toBeVisible({ timeout: 10000 });
+
+  const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
+  await expect(menuItem).toBeVisible({ timeout: 10000 });
+
+  await menuItem.click();
 }
 
 // Generate unique ticket name for each test run
 function generateTicketName() {
-    return `Test Ticket ${Date.now()}`;
+  return `Test Ticket ${Date.now()}`;
 }
 
 test.describe.serial('Ticket CRUD flow', () => {
-    let ticketName: string;
-    let updatedTicketName: string;
+  let ticketName: string;
+  let updatedTicketName: string;
+  let page: Page;
 
-    test('MSUP-TICKET-TC007_Add Ticket', async ({ page }) => {
-        ticketName = generateTicketName();
-        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+    await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+  });
 
-        await page.getByText('Add a Ticket').click();
-        await page.getByLabel('Name').fill(ticketName);
+  test.afterAll(async () => {
+    await page.close();
+  });
 
-        const ticketTypeSection = page.locator('text=Select Ticket Type').locator('..');
-        await ticketTypeSection.getByText('Problem', { exact: true }).click();
+  test('MSUP-TICKET-TC007_Add Ticket', async () => {
+    ticketName = generateTicketName();
 
-        const classifySection = page.locator('text=Classify Issue').locator('..');
-        await classifySection.getByText('Failure without downtime', { exact: true }).click();
+    await page.getByText('Add a Ticket').click();
+    await page.getByLabel('Name').fill(ticketName);
 
-        await page.getByText('Select asset', { exact: true }).click();
-        await page.getByText('MPU99993', { exact: true }).click();
+    const ticketTypeSection = page.locator('text=Select Ticket Type').locator('..');
+    await ticketTypeSection.getByText('Problem', { exact: true }).click();
 
-        await page.locator('textarea[name="description"]').fill('This is an automated description.');
-        await page.getByRole('button', { name: 'Create Ticket' }).click();
+    const classifySection = page.locator('text=Classify Issue').locator('..');
+    await classifySection.getByText('Failure without downtime', { exact: true }).click();
 
-        console.log('Ticket added');
-    });
+    await page.getByText('Select asset', { exact: true }).click();
+    await page.getByText('MPU99993', { exact: true }).click();
 
-    test('MSUP-TICKET-TC008_Search Ticket', async ({ page }) => {
-        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+    await page.locator('textarea[name="description"]').fill('This is an automated description.');
+    await page.getByRole('button', { name: 'Create Ticket' }).click();
 
-        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
-        await searchInput.fill(ticketName);
+    console.log('Ticket added');
+  });
 
-        const ticketRow = page.locator('tr', { hasText: ticketName });
-        await expect(ticketRow).toBeVisible();
+  test('MSUP-TICKET-TC008_Search Ticket', async () => {
+    const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    await searchInput.fill(ticketName);
 
-        console.log('Ticket search successful');
-    });
+    const ticketRow = page.locator('tr', { hasText: ticketName });
+    await expect(ticketRow).toBeVisible();
 
-    test('MSUP-TICKET-TC009_View Ticket', async ({ page }) => {
-        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
-        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
-        await searchInput.fill(ticketName);
+    console.log('Ticket search successful');
+  });
 
-        const ticketRow = page.locator('tr', { hasText: ticketName });
-        await expect(ticketRow).toBeVisible();
-        console.log('Ticket viewed');
-    });
+  test('MSUP-TICKET-TC009_View Ticket', async () => {
+    const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    await searchInput.fill(ticketName);
 
-    test('MSUP-TICKET-TC010_Edit Ticket', async ({ page }) => {
-        updatedTicketName = `${ticketName} Updated`;
-        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
-        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
-        await searchInput.fill(ticketName);
+    const ticketRow = page.locator('tr', { hasText: ticketName });
+    await expect(ticketRow).toBeVisible();
+    console.log('Ticket viewed');
+  });
 
-        const ticketRow = page.locator('tr', { hasText: ticketName });
-        await openMenuAndClick(ticketRow, page, 'Edit Ticket');
+  test('MSUP-TICKET-TC010_Edit Ticket', async () => {
+    updatedTicketName = `${ticketName} Updated`;
+    const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    await searchInput.fill(ticketName);
 
-        await page.getByLabel('Name').fill(updatedTicketName);
-        await page.getByRole('button', { name: 'Update Ticket' }).click();
+    const ticketRow = page.locator('tr', { hasText: ticketName });
+    await openMenuAndClick(ticketRow, page, 'Edit Ticket');
 
-        await searchInput.fill(updatedTicketName);
-        const updatedRow = page.locator('tr', { hasText: updatedTicketName });
-        await expect(updatedRow).toBeVisible();
-        console.log('Ticket edited');
-    });
+    await page.getByLabel('Name').fill(updatedTicketName);
+    await page.getByRole('button', { name: 'Update Ticket' }).click();
 
-    test('MSUP-TICKET-TC011_Delete Ticket', async ({ page }) => {
-        await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
-        const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
-        await searchInput.fill(updatedTicketName);
+    await searchInput.fill(updatedTicketName);
+    const updatedRow = page.locator('tr', { hasText: updatedTicketName });
+    await expect(updatedRow).toBeVisible();
+    console.log('Ticket edited');
+  });
 
-        const ticketRow = page.locator('tr', { hasText: updatedTicketName });
-        await openMenuAndClick(ticketRow, page, 'Delete Ticket');
+  test('MSUP-TICKET-TC011_Delete Ticket', async () => {
+    const searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    await searchInput.fill(updatedTicketName);
 
-        await page.getByRole('button', { name: 'Confirm & Delete' }).click();
-        await searchInput.fill(updatedTicketName);
+    const ticketRow = page.locator('tr', { hasText: updatedTicketName });
+    await openMenuAndClick(ticketRow, page, 'Delete Ticket');
 
-        await expect(page.locator('tr', { hasText: updatedTicketName })).toHaveCount(0);
-        console.log('Ticket deleted');
-    });
+    await page.getByRole('button', { name: 'Confirm & Delete' }).click();
+    await searchInput.fill(updatedTicketName);
+
+    await expect(page.locator('tr', { hasText: updatedTicketName })).toHaveCount(0);
+    console.log('Ticket deleted');
+  });
 });
