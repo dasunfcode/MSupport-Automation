@@ -1,35 +1,62 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default defineConfig({
   testDir: './tests',
-  timeout: 30 * 1000,
 
-  // Run tests sequentially
+  /* Global timeout per test */
+  timeout: 60 * 1000,
+
+  /* Expect timeout */
+  expect: {
+    timeout: 10000,
+  },
+
+  /* Run tests sequentially */
   fullyParallel: false,
   workers: 1,
 
+  /* Reporter */
+  reporter: [['list'], ['html', { open: 'never' }]],
+
   use: {
-    headless: false, // set true for CI/CD
+    baseURL: process.env.BASE_URL,
+
+    headless: false, // change to true in CI
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
+
+    screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    trace: 'retain-on-failure',
   },
 
   projects: [
-    // Setup project – runs OTP login ONCE
+    /**
+     * Auth setup project
+     * Runs once to generate auth.json
+     */
     {
       name: 'setup',
-      testMatch: /auth\.setup\.ts/,
+      testMatch: /login\.setup\.ts/,
     },
 
-    // Main project – uses saved login state
+    /**
+     * Main test project
+     * Uses stored auth state
+     */
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'auth.json',
+        storageState: process.env.AUTH_JSON_PATH || 'auth.json',
       },
       dependencies: ['setup'],
     },
   ],
+
+  /* Folder for artifacts */
+  outputDir: 'test-results',
 });
