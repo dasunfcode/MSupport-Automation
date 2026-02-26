@@ -35,7 +35,7 @@ AUTH_JSON_PATH=auth.json
 OTP_TIMEOUT=60000
 ```
 
-> ⚠️ Never commit `.env` or `auth.json`.
+> Never commit `.env` or `auth.json`.
 
 ### 3. Run Tests
 
