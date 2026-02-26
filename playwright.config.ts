@@ -19,7 +19,11 @@ export default defineConfig({
   workers: 1,
 
   /* Reporter */
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['json', { outputFile: 'test-results/results.json' }]
+  ],
 
   use: {
     baseURL: process.env.BASE_URL,

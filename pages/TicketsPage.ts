@@ -47,7 +47,9 @@ export class TicketPage {
     await this.ticketTypeSection().getByText('Problem', { exact: true }).click();
     await this.classifySection().getByText('Failure without downtime', { exact: true }).click();
     await this.selectAssetButton().click();
-    await this.page.getByText('MPU99993', { exact: true }).click();
+    // await this.page.getByText('MPU99993', { exact: true }).click();
+    const firstOption = await this.page.getByRole('option').first();
+    await firstOption.click();
     await this.descriptionTextarea().fill('This is an automated description.');
     await this.createButton().click();
     console.log('Ticket added');
