@@ -163,17 +163,3 @@ test-results/
 
 ---
 
-## Best Practices
-
-* Dedicated auth setup
-* Session reuse with `storageState`
-* Environment-driven configuration
-* Sequential execution for OTP stability
-* Clear separation of concerns
-* Reusable POM structure
-
----
-
-If you want, I can **also create a one-page visual “Quick Start Guide” diagram** that shows **auth flow + writing a new test** for contributors — this makes it very easy for new developers to onboard.
-
-Do you want me to do that next?
