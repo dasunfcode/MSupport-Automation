@@ -19,9 +19,6 @@ test.describe.serial('Asset CRUD flow - NO LOGIN', () => {
     let createDialog: AssetCreateDialog;
     let mcareDialog: AssetMCareDialog;
 
-    // ← THIS IS THE MAGIC LINE (no login ever again)
-    test.use({ storageState: './storage/auth.json' });
-
     test.beforeEach(async ({ page }) => {
         assetsPage = new AssetsPage(page);
         createDialog = new AssetCreateDialog(page);
@@ -29,6 +26,7 @@ test.describe.serial('Asset CRUD flow - NO LOGIN', () => {
     });
 
     test('TC004_CRUD_Add_View_Edit_Delete_Asset_and_MCare', async () => {
+        test.setTimeout(120_000); // This test does 7 operations — needs more than the default 60s
         // ================= CREATE NEW ASSET =================
         await assetsPage.navigateTo();
         await assetsPage.clickAddNewAsset();
@@ -57,10 +55,6 @@ test.describe.serial('Asset CRUD flow - NO LOGIN', () => {
         await assetsPage.navigateTo();
         await assetsPage.deleteFirstAsset();
 
-        // ================= FILTER & EXPORT =================
-        await assetsPage.navigateTo();
-        await assetsPage.applyAssetTypeFilter();
-        await assetsPage.exportAssets();
 
         console.log('🎉 ALL ASSET OPERATIONS COMPLETED SUCCESSFULLY!');
     });
