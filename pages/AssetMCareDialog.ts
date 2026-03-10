@@ -15,6 +15,13 @@ export class AssetMCareDialog {
             this.page.locator('[role="option"]').first().click()
         );
         await this.page.getByRole('button', { name: 'Add' }).first().click().catch(() => { });
+
+        // Handle "Grace Period Exceeded" confirmation dialog if it appears
+        const addAnywayBtn = this.page.getByRole('button', { name: 'Add Anyway' });
+        if (await addAnywayBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            console.log('⚠️ Grace period exceeded — clicking "Add Anyway"');
+            await addAnywayBtn.click();
+        }
     }
 
     /** Add Yearly Maintenance date */
