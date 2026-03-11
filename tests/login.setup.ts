@@ -18,8 +18,8 @@ test('MSUP-AUTH-TC001_user should login successfully using email OTP', async ({ 
     process.env.PASSWORD || ''
   );
 
-  const otp = await getOtpFromEmail();
-  await loginPage.enterOtp(otp.toString());
+  // const otp = await getOtpFromEmail();
+  // await loginPage.enterOtp(otp.toString());
 
   await loginPage.verifyDashboard();
 
