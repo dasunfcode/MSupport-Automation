@@ -103,12 +103,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 53896,
+                  "duration": 10042,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-02-26T07:21:46.794Z",
+                  "startTime": "2026-03-11T06:40:37.894Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -120,6 +120,121 @@
           "file": "login.setup.ts",
           "line": 8,
           "column": 5
+        }
+      ]
+    },
+    {
+      "title": "assetcrud.spec.ts",
+      "file": "assetcrud.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Asset CRUD flow - NO LOGIN",
+          "file": "assetcrud.spec.ts",
+          "line": 17,
+          "column": 15,
+          "specs": [
+            {
+              "title": "TC004_CRUD_Add_View_Edit_Delete_Asset_and_MCare",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 31686,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Clicked Add New Asset\n"
+                        },
+                        {
+                          "text": "📝 Step 1: Basic Asset Info\n"
+                        },
+                        {
+                          "text": "📝 Step 2: Location & Dates\n"
+                        },
+                        {
+                          "text": "📝 Step 3: End Customer & Notes\n"
+                        },
+                        {
+                          "text": "🚀 Submitting new asset...\n"
+                        },
+                        {
+                          "text": "✅ Asset created!\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Asset viewed successfully\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Opened MCare Packages dialog\n"
+                        },
+                        {
+                          "text": "📦 Adding MCare package\n"
+                        },
+                        {
+                          "text": "📅 Adding Yearly Maintenance\n"
+                        },
+                        {
+                          "text": "✅ MCare packages updated\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "Editing location to: Berlin\n"
+                        },
+                        {
+                          "text": "⚠️ Button still disabled → forcing click\n"
+                        },
+                        {
+                          "text": "✅ Asset updated with location: Berlin\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Asset deleted successfully\n"
+                        },
+                        {
+                          "text": "🎉 ALL ASSET OPERATIONS COMPLETED SUCCESSFULLY!\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-11T06:40:50.186Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "fa740943cd08eddc7068-a2513a66fb78b4c7c205",
+              "file": "assetcrud.spec.ts",
+              "line": 28,
+              "column": 9
+            }
+          ]
         }
       ]
     },
@@ -152,12 +267,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4076,
+                      "duration": 3688,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:22:43.538Z",
+                      "startTime": "2026-03-11T06:41:22.247Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -203,12 +318,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5568,
+                      "duration": 6164,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:22:48.024Z",
+                      "startTime": "2026-03-11T06:41:25.958Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -237,12 +352,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3649,
+                      "duration": 4095,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:22:53.615Z",
+                      "startTime": "2026-03-11T06:41:32.140Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -271,12 +386,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4038,
+                      "duration": 4316,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:22:57.281Z",
+                      "startTime": "2026-03-11T06:41:36.252Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -305,12 +420,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6139,
+                      "duration": 6039,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:01.333Z",
+                      "startTime": "2026-03-11T06:41:40.581Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -339,12 +454,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5224,
+                      "duration": 4855,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:07.486Z",
+                      "startTime": "2026-03-11T06:41:46.635Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -390,7 +505,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1727,
+                      "duration": 1120,
                       "errors": [],
                       "stdout": [
                         {
@@ -399,7 +514,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:12.790Z",
+                      "startTime": "2026-03-11T06:41:51.510Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -428,7 +543,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 548,
+                      "duration": 2004,
                       "errors": [],
                       "stdout": [
                         {
@@ -437,7 +552,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:17.193Z",
+                      "startTime": "2026-03-11T06:41:56.017Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -466,7 +581,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 253,
+                      "duration": 40,
                       "errors": [],
                       "stdout": [
                         {
@@ -475,7 +590,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:17.781Z",
+                      "startTime": "2026-03-11T06:41:58.061Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -504,7 +619,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2296,
+                      "duration": 2240,
                       "errors": [],
                       "stdout": [
                         {
@@ -519,7 +634,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:18.070Z",
+                      "startTime": "2026-03-11T06:41:58.128Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -548,7 +663,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1823,
+                      "duration": 1810,
                       "errors": [],
                       "stdout": [
                         {
@@ -563,7 +678,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-02-26T07:23:20.393Z",
+                      "startTime": "2026-03-11T06:42:00.382Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -583,9 +698,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-02-26T07:21:44.665Z",
-    "duration": 98333.202,
-    "expected": 12,
+    "startTime": "2026-03-11T06:40:36.251Z",
+    "duration": 86639.46800000001,
+    "expected": 13,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
