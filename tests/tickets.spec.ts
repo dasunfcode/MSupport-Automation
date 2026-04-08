@@ -16,7 +16,7 @@ test.describe.serial('Ticket CRUD flow', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     ticketPage = new TicketPage(page);
-    await page.goto(`${process.env.BASE_URL}/dashboard/tickets`);
+    await ticketPage.goto();
   });
 
   test.afterAll(async () => {

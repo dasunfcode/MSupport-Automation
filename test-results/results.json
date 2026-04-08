@@ -103,12 +103,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10042,
+                  "duration": 7355,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-03-11T06:40:37.894Z",
+                  "startTime": "2026-04-08T09:12:49.361Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -120,359 +120,6 @@
           "file": "login.setup.ts",
           "line": 8,
           "column": 5
-        }
-      ]
-    },
-    {
-      "title": "assetcrud.spec.ts",
-      "file": "assetcrud.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Asset CRUD flow - NO LOGIN",
-          "file": "assetcrud.spec.ts",
-          "line": 17,
-          "column": 15,
-          "specs": [
-            {
-              "title": "TC004_CRUD_Add_View_Edit_Delete_Asset_and_MCare",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 120000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 31686,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "✅ Opened Asset Management page\n"
-                        },
-                        {
-                          "text": "✅ Clicked Add New Asset\n"
-                        },
-                        {
-                          "text": "📝 Step 1: Basic Asset Info\n"
-                        },
-                        {
-                          "text": "📝 Step 2: Location & Dates\n"
-                        },
-                        {
-                          "text": "📝 Step 3: End Customer & Notes\n"
-                        },
-                        {
-                          "text": "🚀 Submitting new asset...\n"
-                        },
-                        {
-                          "text": "✅ Asset created!\n"
-                        },
-                        {
-                          "text": "✅ Opened Asset Management page\n"
-                        },
-                        {
-                          "text": "✅ Asset viewed successfully\n"
-                        },
-                        {
-                          "text": "✅ Opened Asset Management page\n"
-                        },
-                        {
-                          "text": "✅ Opened MCare Packages dialog\n"
-                        },
-                        {
-                          "text": "📦 Adding MCare package\n"
-                        },
-                        {
-                          "text": "📅 Adding Yearly Maintenance\n"
-                        },
-                        {
-                          "text": "✅ MCare packages updated\n"
-                        },
-                        {
-                          "text": "✅ Opened Asset Management page\n"
-                        },
-                        {
-                          "text": "Editing location to: Berlin\n"
-                        },
-                        {
-                          "text": "⚠️ Button still disabled → forcing click\n"
-                        },
-                        {
-                          "text": "✅ Asset updated with location: Berlin\n"
-                        },
-                        {
-                          "text": "✅ Opened Asset Management page\n"
-                        },
-                        {
-                          "text": "✅ Asset deleted successfully\n"
-                        },
-                        {
-                          "text": "🎉 ALL ASSET OPERATIONS COMPLETED SUCCESSFULLY!\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:40:50.186Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "fa740943cd08eddc7068-a2513a66fb78b4c7c205",
-              "file": "assetcrud.spec.ts",
-              "line": 28,
-              "column": 9
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "logs.spec.ts",
-      "file": "logs.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Logs Page Tests",
-          "file": "logs.spec.ts",
-          "line": 4,
-          "column": 15,
-          "specs": [
-            {
-              "title": "MSUP-LOGS-TC012_Should_display_all_log_tabs",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3688,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:22.247Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "ee800b8f709b91acd6c6-32fae44e2fe44260e9ac",
-              "file": "logs.spec.ts",
-              "line": 6,
-              "column": 7
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "organizations.spec.ts",
-      "file": "organizations.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Organization CRUD flow",
-          "file": "organizations.spec.ts",
-          "line": 4,
-          "column": 15,
-          "specs": [
-            {
-              "title": "MSUP-ORG-TC002_Add Organization",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6164,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:25.958Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e73cfbd0adf242785189-96c6e7f92edad4a878af",
-              "file": "organizations.spec.ts",
-              "line": 13,
-              "column": 7
-            },
-            {
-              "title": "MSUP-ORG-TC003_Search Organization",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4095,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:32.140Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e73cfbd0adf242785189-035aa05f242b6292d175",
-              "file": "organizations.spec.ts",
-              "line": 23,
-              "column": 7
-            },
-            {
-              "title": "MSUP-ORG-TC004_View Organization",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4316,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:36.252Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e73cfbd0adf242785189-626fe2f0cfa35629d71d",
-              "file": "organizations.spec.ts",
-              "line": 32,
-              "column": 7
-            },
-            {
-              "title": "MSUP-ORG-TC005_Edit Organization",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6039,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:40.581Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e73cfbd0adf242785189-70a99ae089974fa46301",
-              "file": "organizations.spec.ts",
-              "line": 41,
-              "column": 7
-            },
-            {
-              "title": "MSUP-ORG-TC006_Delete Organization",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4855,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-11T06:41:46.635Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "e73cfbd0adf242785189-acbe7ba7228bff2805ac",
-              "file": "organizations.spec.ts",
-              "line": 51,
-              "column": 7
-            }
-          ]
         }
       ]
     },
@@ -505,7 +152,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1120,
+                      "duration": 2055,
                       "errors": [],
                       "stdout": [
                         {
@@ -514,7 +161,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-11T06:41:51.510Z",
+                      "startTime": "2026-04-08T09:12:59.848Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -543,7 +190,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2004,
+                      "duration": 79,
                       "errors": [],
                       "stdout": [
                         {
@@ -552,7 +199,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-11T06:41:56.017Z",
+                      "startTime": "2026-04-08T09:13:05.891Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -581,7 +228,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 40,
+                      "duration": 101,
                       "errors": [],
                       "stdout": [
                         {
@@ -590,7 +237,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-11T06:41:58.061Z",
+                      "startTime": "2026-04-08T09:13:06.045Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -619,7 +266,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2240,
+                      "duration": 3310,
                       "errors": [],
                       "stdout": [
                         {
@@ -634,7 +281,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-11T06:41:58.128Z",
+                      "startTime": "2026-04-08T09:13:06.180Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -663,7 +310,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1810,
+                      "duration": 1883,
                       "errors": [],
                       "stdout": [
                         {
@@ -678,7 +325,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-11T06:42:00.382Z",
+                      "startTime": "2026-04-08T09:13:09.525Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -698,9 +345,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-11T06:40:36.251Z",
-    "duration": 86639.46800000001,
-    "expected": 13,
+    "startTime": "2026-04-08T09:12:47.457Z",
+    "duration": 24937.662,
+    "expected": 6,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
