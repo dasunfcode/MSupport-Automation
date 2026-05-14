@@ -103,12 +103,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7355,
+                  "duration": 7524,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-08T09:12:49.361Z",
+                  "startTime": "2026-05-14T10:03:13.528Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -124,25 +124,25 @@
       ]
     },
     {
-      "title": "tickets.spec.ts",
-      "file": "tickets.spec.ts",
+      "title": "assetcrud.spec.ts",
+      "file": "assetcrud.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Ticket CRUD flow",
-          "file": "tickets.spec.ts",
-          "line": 10,
+          "title": "Asset CRUD flow - NO LOGIN",
+          "file": "assetcrud.spec.ts",
+          "line": 17,
           "column": 15,
           "specs": [
             {
-              "title": "MSUP-TICKET-TC007_Add Ticket",
+              "title": "TC004_CRUD_Add_View_Edit_Delete_Asset_and_MCare",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "chromium",
@@ -152,136 +152,76 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2055,
+                      "duration": 36928,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Ticket added\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-08T09:12:59.848Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-2de00c35e9f14c4d6a3c",
-              "file": "tickets.spec.ts",
-              "line": 26,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC008_Search Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 79,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-08T09:13:05.891Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-e98511603884d7046a6c",
-              "file": "tickets.spec.ts",
-              "line": 31,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC009_View Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 101,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-08T09:13:06.045Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-579e5117068d8ac2709f",
-              "file": "tickets.spec.ts",
-              "line": 35,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC010_Edit Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3310,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
+                          "text": "✅ Opened Asset Management page\n"
                         },
                         {
-                          "text": "Clicking Open menu for \"Edit Ticket\"\n"
+                          "text": "✅ Clicked Add New Asset\n"
                         },
                         {
-                          "text": "Ticket edited\n"
+                          "text": "📝 Step 1: Basic Asset Info\n"
+                        },
+                        {
+                          "text": "📝 Step 2: Location & Dates\n"
+                        },
+                        {
+                          "text": "📝 Step 3: End Customer & Notes\n"
+                        },
+                        {
+                          "text": "🚀 Submitting new asset...\n"
+                        },
+                        {
+                          "text": "✅ Asset created!\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Asset viewed successfully\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Opened MCare Packages dialog\n"
+                        },
+                        {
+                          "text": "📦 Adding MCare package\n"
+                        },
+                        {
+                          "text": "📅 Adding Yearly Maintenance\n"
+                        },
+                        {
+                          "text": "✅ MCare packages updated\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "Editing location to: Berlin\n"
+                        },
+                        {
+                          "text": "⚠️ Button still disabled → forcing click\n"
+                        },
+                        {
+                          "text": "✅ Asset updated with location: Berlin\n"
+                        },
+                        {
+                          "text": "✅ Opened Asset Management page\n"
+                        },
+                        {
+                          "text": "✅ Asset deleted successfully\n"
+                        },
+                        {
+                          "text": "🎉 ALL ASSET OPERATIONS COMPLETED SUCCESSFULLY!\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-08T09:13:06.180Z",
+                      "startTime": "2026-05-14T10:03:24.876Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -289,54 +229,10 @@
                   "status": "expected"
                 }
               ],
-              "id": "d0af0b82280f1821db49-d588f7ba9e2c19232a4b",
-              "file": "tickets.spec.ts",
-              "line": 39,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC011_Delete Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1883,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        },
-                        {
-                          "text": "Clicking Open menu for \"Delete Ticket\"\n"
-                        },
-                        {
-                          "text": "Ticket deleted\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-08T09:13:09.525Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-c98d0b6b3b4add13a708",
-              "file": "tickets.spec.ts",
-              "line": 44,
-              "column": 7
+              "id": "fa740943cd08eddc7068-a2513a66fb78b4c7c205",
+              "file": "assetcrud.spec.ts",
+              "line": 28,
+              "column": 9
             }
           ]
         }
@@ -345,9 +241,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-08T09:12:47.457Z",
-    "duration": 24937.662,
-    "expected": 6,
+    "startTime": "2026-05-14T10:03:11.642Z",
+    "duration": 51211.433000000005,
+    "expected": 2,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

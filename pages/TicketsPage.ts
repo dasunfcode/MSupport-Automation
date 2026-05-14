@@ -49,7 +49,7 @@ export class TicketPage {
     await this.addTicketButton().click();
     await this.nameInput().fill(name);
     await this.ticketTypeSection().getByText('Problem', { exact: true }).click();
-    await this.classifySection().getByText('Failure without downtime', { exact: true }).click();
+    await this.classifySection().getByText('Failure Without Downtime', { exact: true }).click();
     await this.selectAssetButton().click();
     // await this.page.getByText('MPU99993', { exact: true }).click();
     const firstOption = await this.page.getByRole('option').nth(1);

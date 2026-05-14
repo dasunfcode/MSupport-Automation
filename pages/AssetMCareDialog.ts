@@ -27,8 +27,19 @@ export class AssetMCareDialog {
     /** Add Yearly Maintenance date */
     async addYearlyMaintenance() {
         console.log('📅 Adding Yearly Maintenance');
-        await this.page.getByRole('button', { name: /DD\/MM\/YYYY/ }).first().click().catch(() => { });
-        await this.page.locator('[role="gridcell"] button:not([disabled])').first().click();
+
+        const randomDays = Math.floor(Math.random() * 30) - 15;
+
+        const randomDate = new Date();
+        randomDate.setDate(randomDate.getDate() + randomDays);
+
+        const formattedDate = randomDate.toLocaleDateString('en-GB');
+
+        await this.page
+            .locator('input[placeholder="DD/MM/YYYY"]')
+            .first()
+            .fill(formattedDate);
+
         await this.page.getByRole('button', { name: 'Add' }).nth(1).click().catch(() => { });
     }
 
