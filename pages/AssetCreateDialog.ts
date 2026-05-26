@@ -43,8 +43,13 @@ export class AssetCreateDialog {
         await this.page.getByRole('group').filter({ hasText: 'Ex Works Date' }).getByRole('button').click();
         await this.page.locator('[role="gridcell"] button:not([disabled])').first().click();
 
+        // Reference Date
+        await this.page.getByRole('group').filter({ hasText: 'Reference Date' }).getByRole('button').click();
+        await this.page.locator('[role="gridcell"] button:not([disabled])').first().click();
+
+        // Related Contact
         await this.page.getByRole('textbox', { name: 'Related Contact' }).fill(contact);
-        await this.page.getByRole('textbox', { name: 'Related Organizations' }).fill(organization);
+
 
         // ← FIXED: exact: true + .last() for extra safety
         await this.dialog.getByRole('button', { name: 'Next', exact: true }).last().click();
@@ -53,8 +58,17 @@ export class AssetCreateDialog {
     /** Step 3: Fill end customer and notes */
     async fillEndCustomerAndNotes(country: string, notes: string) {
         console.log('📝 Step 3: End Customer & Notes');
+
+        // await this.page.getByRole('textbox', { name: '(Assigned) Organizations' }).fill(organization);
+        // await this.dialog.locator('[role="combobox"]').first().click();
+        // await this.page.locator('[role="option"]').first().click();
+
         await this.dialog.locator('[role="combobox"]').first().click();
-        await this.page.locator('[role="option"]').first().click();
+
+        const firstOption = this.page.getByRole('option').first();
+
+        await firstOption.waitFor({ state: 'visible' });
+        await firstOption.click();
 
         await this.page.getByRole('textbox', { name: 'Destination Country' }).fill(country).catch(() => { });
         await this.page.getByRole('textbox', { name: 'Enter Notes' }).fill(notes).catch(() => { });
