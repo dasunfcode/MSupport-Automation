@@ -1,0 +1,8 @@
+{
+    "mpure": {
+        "heading": "Motor driver reported overtemperature warning"
+    },
+    "mprint": {
+        "heading": "Failed to home stepper"
+    }
+}

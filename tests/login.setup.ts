@@ -12,6 +12,7 @@ test('MSUP-AUTH-TC001_user should login successfully using email OTP', async ({ 
 
   await loginPage.goto(process.env.BASE_URL || '');
   await loginPage.verifyTitle();
+  
 
   await loginPage.login(
     process.env.EMAIL || '',
