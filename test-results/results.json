@@ -103,12 +103,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4297,
+                  "duration": 4643,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-05-27T15:14:58.953Z",
+                  "startTime": "2026-05-27T16:47:05.379Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -124,230 +124,257 @@
       ]
     },
     {
-      "title": "tickets.spec.ts",
-      "file": "tickets.spec.ts",
+      "title": "assetlogs.test.ts",
+      "file": "assetlogs.test.ts",
       "column": 0,
       "line": 0,
-      "specs": [],
-      "suites": [
+      "specs": [
         {
-          "title": "Ticket CRUD flow",
-          "file": "tickets.spec.ts",
-          "line": 10,
-          "column": 15,
-          "specs": [
+          "title": "Verify navigation to assets page and search by serial number",
+          "ok": true,
+          "tags": [],
+          "tests": [
             {
-              "title": "MSUP-TICKET-TC007_Add Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
                 {
-                  "timeout": 60000,
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2595,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:12.151Z",
                   "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1567,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket added\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-27T15:15:04.895Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
+                  "attachments": []
                 }
               ],
-              "id": "d0af0b82280f1821db49-2de00c35e9f14c4d6a3c",
-              "file": "tickets.spec.ts",
-              "line": 26,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC008_Search Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 121,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-27T15:15:09.048Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-e98511603884d7046a6c",
-              "file": "tickets.spec.ts",
-              "line": 31,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC009_View Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 58,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-27T15:15:09.213Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-579e5117068d8ac2709f",
-              "file": "tickets.spec.ts",
-              "line": 35,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC010_Edit Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2641,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        },
-                        {
-                          "text": "Clicking Open menu for \"Edit Ticket\"\n"
-                        },
-                        {
-                          "text": "Ticket edited\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-27T15:15:09.418Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-d588f7ba9e2c19232a4b",
-              "file": "tickets.spec.ts",
-              "line": 39,
-              "column": 7
-            },
-            {
-              "title": "MSUP-TICKET-TC011_Delete Ticket",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1296,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Ticket search/view successful\n"
-                        },
-                        {
-                          "text": "Clicking Open menu for \"Delete Ticket\"\n"
-                        },
-                        {
-                          "text": "Ticket deleted\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-05-27T15:15:12.156Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d0af0b82280f1821db49-c98d0b6b3b4add13a708",
-              "file": "tickets.spec.ts",
-              "line": 44,
-              "column": 7
+              "status": "expected"
             }
-          ]
+          ],
+          "id": "041d4c1e2e0d9388b576-4b5c2f64201ba21ee95f",
+          "file": "assetlogs.test.ts",
+          "line": 5,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPure Hardware logs open and verify table details",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:15.583Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-de8215d780113e9f766d",
+          "file": "assetlogs.test.ts",
+          "line": 10,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPure Hardware logs sorting, pagination and filters work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:18.578Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-c85a8ecaf3dd913364be",
+          "file": "assetlogs.test.ts",
+          "line": 15,
+          "column": 5
+        },
+        {
+          "title": "Verify that full MPure hardware log details are visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1217,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:36.416Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-3b5b7345d515e589d1f6",
+          "file": "assetlogs.test.ts",
+          "line": 29,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPrint Hardware logs open and verify table details",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2142,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:37.672Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-b46f97734f6d2febfc99",
+          "file": "assetlogs.test.ts",
+          "line": 33,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPrint Hardware logs sorting, pagination and filters work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16675,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:39.836Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-156ac032d134043eb88a",
+          "file": "assetlogs.test.ts",
+          "line": 38,
+          "column": 5
+        },
+        {
+          "title": "Verify that full MPrint hardware log details are visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1125,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-05-27T16:47:56.534Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-80d32bb5bdf287db739f",
+          "file": "assetlogs.test.ts",
+          "line": 52,
+          "column": 5
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-27T15:14:57.920Z",
-    "duration": 16221.494999999999,
-    "expected": 6,
+    "startTime": "2026-05-27T16:47:04.409Z",
+    "duration": 53955.648,
+    "expected": 8,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
