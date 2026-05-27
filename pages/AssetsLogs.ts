@@ -290,7 +290,7 @@ export class AssetsLiveData {
     // Method to verify full hardware log view
     async verifyFullHardwareLog(machineType: 'mpure' | 'mprint') {
         const rowName = machineType === 'mpure'
-            ? '5520 WARNING stepper/supply/'
+            ? '5540 WARNING stepper/supply/'
             : '22290 WARNING stepper/main/';
         const viewFullLogButton: Locator = this.page.getByRole('row', { name: rowName }).getByLabel('View Details');
         await viewFullLogButton.click();
