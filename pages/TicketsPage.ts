@@ -18,11 +18,13 @@ export class TicketPage {
   ticketTypeSection() { return this.page.locator('text=Select Ticket Type').locator('..'); }
   classifySection() { return this.page.locator('text=Classify Issue').locator('..'); }
   selectAssetButton() { return this.page.getByText('Select asset', { exact: true }); }
+  escalateButton() { return this.page.locator('.peer.h-4'); }
   descriptionTextarea() { return this.page.locator('textarea[name="description"]'); }
   createButton() { return this.page.getByRole('button', { name: 'Create Ticket' }); }
   updateButton() { return this.page.getByRole('button', { name: 'Update Ticket' }); }
   confirmDeleteButton() { return this.page.getByRole('button', { name: 'Confirm & Delete' }); }
   searchInput() { return this.page.getByPlaceholder('Search by Ticket ID, Name, Type...'); }
+
 
   ticketRow(ticketName: string) {
     return this.page.locator('tr', { hasText: ticketName });
@@ -45,16 +47,21 @@ export class TicketPage {
   }
 
   // Actions
-  async addTicket(name: string) {
+  async addTicket(name: string, adminType: string) {
     await this.addTicketButton().click();
     await this.nameInput().fill(name);
     await this.ticketTypeSection().getByText('Problem', { exact: true }).click();
     await this.classifySection().getByText('Failure Without Downtime', { exact: true }).click();
     await this.selectAssetButton().click();
-    // await this.page.getByText('MPU99993', { exact: true }).click();
-    const firstOption = await this.page.getByRole('option').nth(1);
-    await firstOption.click();
+    await this.page.getByRole('option').nth(1).click();
     await this.descriptionTextarea().fill('This is an automated description.');
+
+    if (adminType === 'Global Admin') {
+      await expect(this.escalateButton()).not.toBeVisible();
+    } else {
+      await this.escalateButton().click();
+    }
+
     await this.createButton().click();
     console.log('Ticket added');
   }
