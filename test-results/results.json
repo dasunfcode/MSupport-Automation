@@ -103,12 +103,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4643,
+                  "duration": 5250,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-05-27T16:47:05.379Z",
+                  "startTime": "2026-05-28T18:45:21.374Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -124,257 +124,562 @@
       ]
     },
     {
-      "title": "assetlogs.test.ts",
-      "file": "assetlogs.test.ts",
+      "title": "tickets.spec.ts",
+      "file": "tickets.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "Verify navigation to assets page and search by serial number",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Ticket CRUD flow - Global Admin",
+          "file": "tickets.spec.ts",
+          "line": 45,
+          "column": 19,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC007_Add Ticket - Global Admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2595,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:12.151Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2088,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket added\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:29.916Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "d0af0b82280f1821db49-599adae6675008233b44",
+              "file": "tickets.spec.ts",
+              "line": 62,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC008_Search Ticket - Global Admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 129,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:35.947Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-ed3c3e55c3bb03b646d6",
+              "file": "tickets.spec.ts",
+              "line": 67,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC009_View Ticket - Global Admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 114,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:36.259Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-205602c2d597eafa2a21",
+              "file": "tickets.spec.ts",
+              "line": 71,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC010_Edit Ticket - Global Admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2499,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        },
+                        {
+                          "text": "Clicking Open menu for \"Edit Ticket\"\n"
+                        },
+                        {
+                          "text": "Ticket edited\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:36.608Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-b8c116bf871272c023f5",
+              "file": "tickets.spec.ts",
+              "line": 75,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC011_Delete Ticket - Global Admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1821,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        },
+                        {
+                          "text": "Clicking Open menu for \"Delete Ticket\"\n"
+                        },
+                        {
+                          "text": "Ticket deleted\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:39.156Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-0765b6d760f8ff24a899",
+              "file": "tickets.spec.ts",
+              "line": 81,
+              "column": 17
             }
-          ],
-          "id": "041d4c1e2e0d9388b576-4b5c2f64201ba21ee95f",
-          "file": "assetlogs.test.ts",
-          "line": 5,
-          "column": 5
+          ]
         },
         {
-          "title": "Verify that MPure Hardware logs open and verify table details",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Ticket CRUD flow - Organization Admin - Extended",
+          "file": "tickets.spec.ts",
+          "line": 45,
+          "column": 19,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC007a_Add Ticket - Organization Admin - Extended",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2967,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:15.583Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1881,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket added\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:41.396Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "d0af0b82280f1821db49-212dbe09cb466ee94210",
+              "file": "tickets.spec.ts",
+              "line": 62,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC008a_Search Ticket - Organization Admin - Extended",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 361,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:48.739Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-076b5e8b2211ef2e09a9",
+              "file": "tickets.spec.ts",
+              "line": 67,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC009a_View Ticket - Organization Admin - Extended",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 87,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:49.226Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-ec00e638bc7d766e5630",
+              "file": "tickets.spec.ts",
+              "line": 71,
+              "column": 13
+            },
+            {
+              "title": "MSUP-TICKET-TC010a_Edit Ticket - Organization Admin - Extended",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2371,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        },
+                        {
+                          "text": "Clicking Open menu for \"Edit Ticket\"\n"
+                        },
+                        {
+                          "text": "Ticket edited\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:49.424Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d0af0b82280f1821db49-8e77233b3be9bcea05b4",
+              "file": "tickets.spec.ts",
+              "line": 75,
+              "column": 13
             }
-          ],
-          "id": "041d4c1e2e0d9388b576-de8215d780113e9f766d",
-          "file": "assetlogs.test.ts",
-          "line": 10,
-          "column": 5
+          ]
         },
         {
-          "title": "Verify that MPure Hardware logs sorting, pagination and filters work",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Ticket CRUD flow - Organization Admin - Basic",
+          "file": "tickets.spec.ts",
+          "line": 45,
+          "column": 19,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC007b_Add Ticket - Organization Admin - Basic",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 17814,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:18.578Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1891,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket added\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:52.013Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-c85a8ecaf3dd913364be",
-          "file": "assetlogs.test.ts",
-          "line": 15,
-          "column": 5
-        },
-        {
-          "title": "Verify that full MPure hardware log details are visible",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "d0af0b82280f1821db49-3117a1e90ee8b28664ad",
+              "file": "tickets.spec.ts",
+              "line": 62,
+              "column": 13
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC008b_Search Ticket - Organization Admin - Basic",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1217,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:36.416Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 298,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:59.051Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-3b5b7345d515e589d1f6",
-          "file": "assetlogs.test.ts",
-          "line": 29,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPrint Hardware logs open and verify table details",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "d0af0b82280f1821db49-4c270dbaf5e12f4f6a2c",
+              "file": "tickets.spec.ts",
+              "line": 67,
+              "column": 13
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC009b_View Ticket - Organization Admin - Basic",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2142,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:37.672Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 122,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:59.474Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-b46f97734f6d2febfc99",
-          "file": "assetlogs.test.ts",
-          "line": 33,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPrint Hardware logs sorting, pagination and filters work",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "d0af0b82280f1821db49-37d17a2b320fedd62f39",
+              "file": "tickets.spec.ts",
+              "line": 71,
+              "column": 13
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "MSUP-TICKET-TC010b_Edit Ticket - Organization Admin - Basic",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 16675,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:39.836Z",
+                  "timeout": 60000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2474,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Ticket search/view successful\n"
+                        },
+                        {
+                          "text": "Clicking Open menu for \"Edit Ticket\"\n"
+                        },
+                        {
+                          "text": "Ticket edited\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T18:45:59.716Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "d0af0b82280f1821db49-9f86beb0c09aff53bb50",
+              "file": "tickets.spec.ts",
+              "line": 75,
+              "column": 13
             }
-          ],
-          "id": "041d4c1e2e0d9388b576-156ac032d134043eb88a",
-          "file": "assetlogs.test.ts",
-          "line": 38,
-          "column": 5
-        },
-        {
-          "title": "Verify that full MPrint hardware log details are visible",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1125,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-05-27T16:47:56.534Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-80d32bb5bdf287db739f",
-          "file": "assetlogs.test.ts",
-          "line": 52,
-          "column": 5
+          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-27T16:47:04.409Z",
-    "duration": 53955.648,
-    "expected": 8,
+    "startTime": "2026-05-28T18:45:19.376Z",
+    "duration": 43927.76,
+    "expected": 14,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

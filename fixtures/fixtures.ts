@@ -1,17 +1,51 @@
-import { test as base } from '@playwright/test';
+import { test as base, Browser, Page } from '@playwright/test';
 import { AssetsLiveData } from '../pages/AssetsLogs';
+import { TicketPage } from '../pages/TicketsPage';
+import { LoginPage } from '../pages/LoginPage';
 
-type Fixtures = {
+type Credentials = { email: string; password: string };
+
+type WorkerFixtures = {
     assetsLiveData: AssetsLiveData;
+    createTicketPage: (credentials?: Credentials) => Promise<{ ticketPage: TicketPage; page: Page }>;
 };
 
-export const test = base.extend<{}, Fixtures>({
+async function loginAs(browser: Browser, email: string, password: string): Promise<Page> {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+    const loginPage = new LoginPage(page);
+    await loginPage.goto(process.env.BASE_URL || '');
+    await loginPage.login(email, password);
+    await loginPage.verifyDashboard();
+    return page;
+}
+
+export const test = base.extend<{}, WorkerFixtures>({
     assetsLiveData: [
         async ({ browser }, use) => {
             const page = await browser.newPage();
             const assetsLiveData = new AssetsLiveData(page);
             await use(assetsLiveData);
             await page.close();
+        },
+        { scope: 'worker' },
+    ],
+
+    createTicketPage: [
+        async ({ browser }, use) => {
+            const pagesToClose: Page[] = [];
+            await use(async (credentials?: Credentials) => {
+                const page = credentials
+                    ? await loginAs(browser, credentials.email, credentials.password)
+                    : await browser.newPage();
+                pagesToClose.push(page);
+                const ticketPage = new TicketPage(page);
+                await ticketPage.goto();
+                return { ticketPage, page };
+            });
+            for (const p of pagesToClose) {
+                if (!p.isClosed()) await p.close();
+            }
         },
         { scope: 'worker' },
     ],
