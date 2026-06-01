@@ -32,18 +32,33 @@ export class TicketPage {
 
   // Menu helper
   async openMenuAndClick(row: Locator, menuItemName: string) {
-    const menuButton = row.getByRole('button', { name: 'Open menu' }).first();
     console.log(`Clicking Open menu for "${menuItemName}"`);
+
+    // Wait for the row to settle so the trigger doesn't get re-rendered mid-click.
+    await expect(row).toBeVisible({ timeout: 10000 });
+    const menuButton = row.getByRole('button', { name: 'Open menu' }).first();
     await expect(menuButton).toBeVisible({ timeout: 10000 });
-    await menuButton.click();
+    await expect(menuButton).toBeEnabled({ timeout: 10000 });
 
     const dropdown = this.page.locator('[role="menu"]').first();
-    await expect(dropdown).toBeVisible({ timeout: 10000 });
-
     const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
-    await expect(menuItem).toBeVisible({ timeout: 10000 });
+
+    // Retry the open: sometimes the first click is swallowed (focus/hydration race),
+    // so re-click the trigger until the menu actually renders the target item.
+    await expect(async () => {
+      if (!(await dropdown.isVisible())) {
+        await menuButton.click();
+      }
+      await expect(menuItem).toBeVisible({ timeout: 2000 });
+    }).toPass({ timeout: 15000, intervals: [250, 500, 1000] });
 
     await menuItem.click();
+
+    // Confirm the menu actually closed; if not, the click missed — retry once.
+    if (await dropdown.isVisible().catch(() => false)) {
+      await menuItem.click({ force: true });
+    }
+    await expect(dropdown).toBeHidden({ timeout: 5000 });
   }
 
   // Actions
