@@ -6,16 +6,23 @@ export class OrganizationsPage {
   readonly addNewButton: Locator;
   readonly dialog: Locator;
   readonly searchInput: Locator;
+  readonly nextButton: Locator;
+  readonly companyNameInput: Locator;
+  readonly phoneInput: Locator;
+  readonly emailInput: Locator;
 
   constructor(page: Page) {
     this.page = page;
 
     this.addNewButton = page.getByRole('button', { name: 'Add New Organization' });
     this.dialog = page.getByRole('dialog');
-
     this.searchInput = page.getByPlaceholder(
       'Search by Company ID, Company Name, Phone, Email, City, Country, Time Zone, Status'
     );
+    this.nextButton = this.dialog.getByRole('button', { name: 'Next' });
+    this.companyNameInput = page.getByLabel('Company Name');
+    this.phoneInput = page.getByLabel('Phone Number');
+    this.emailInput = page.getByLabel('Email Address');
   }
 
   async goto() {
@@ -29,19 +36,19 @@ export class OrganizationsPage {
 
   async selectPartnerType() {
     await this.page.getByText('Extended Service Partner Organization').click();
-    await this.page.getByText('Next').click();
+    await this.nextButton.click();
   }
 
   async fillBasicDetails(name: string, phone: string, email: string) {
-    await this.page.getByLabel('Company Name').fill(name);
-    await this.page.getByLabel('Phone Number').fill(phone);
-    await this.page.getByLabel('Email Address').fill(email);
+    await this.companyNameInput.fill(name);
+    await this.phoneInput.fill(phone);
+    await this.emailInput.fill(email);
   }
 
   async submitOrganization() {
-    await this.page.getByText('Next').click();
-    await this.page.getByText('Next').click();
-    await this.page.getByText('Add Organization').click();
+    await this.nextButton.click();
+    await this.nextButton.click();
+    await this.dialog.getByRole('button', { name: 'Add Organization' }).click();
   }
 
   async searchOrganization(name: string) {
@@ -58,25 +65,29 @@ export class OrganizationsPage {
     await row.getByRole('button', { name: 'Open menu' }).click();
   }
 
+  private menuItem(name: string | RegExp) {
+    return this.page.getByRole('menuitem', { name });
+  }
+
   async clickView() {
-    await this.page.getByText('View').click();
+    await this.menuItem('View').click();
   }
 
   async clickEdit() {
-    await this.page.getByText('Edit').click();
+    await this.menuItem('Edit').click();
   }
 
   async updateName(newName: string) {
-    await this.page.getByLabel('Company Name').fill(newName);
-    await this.page.getByText('Update Organization').click();
+    await this.companyNameInput.fill(newName);
+    await this.dialog.getByRole('button', { name: 'Update Organization' }).click();
   }
 
   async deactivateOrganization() {
-    await this.page.getByText('Deactivate Organization').click();
-    await this.page.getByText('Confirm & Deactivate').click();
+    await this.menuItem('Deactivate Organization').click();
+    await this.page.getByRole('button', { name: 'Confirm & Deactivate' }).click();
   }
 
   async expectVisible(text: string) {
-    await expect(this.page.getByText(text)).toBeVisible();
+    await expect(this.page.getByText(text).first()).toBeVisible();
   }
 }

@@ -1,100 +1,59 @@
 import { Page } from '@playwright/test';
-import dotenv from 'dotenv';
 
-dotenv.config();
+type RowAction = 'view' | 'edit' | 'delete' | 'manage-mcare-packages';
+
+const ACTION_TESTID_PREFIX: Record<RowAction, string> = {
+    view: 'view-asset-btn-',
+    edit: 'edit-asset-btn-',
+    delete: 'delete-asset-btn-',
+    'manage-mcare-packages': 'manage-mcare-packages-btn-',
+};
 
 export class AssetsPage {
-    readonly page: Page;
+    constructor(readonly page: Page) {}
 
-    constructor(page: Page) {
-        this.page = page;
-    }
-
-    /** Go to the Asset Management page */
     async navigateTo() {
-        await this.page.goto(`${process.env.BASE_URL}/dashboard/assets`);
-        await this.page.waitForLoadState('networkidle', { timeout: 20000 });
-        console.log('✅ Opened Asset Management page');
+        await this.page.goto('/dashboard/assets');
+        await this.page.waitForLoadState('networkidle', { timeout: 20_000 });
     }
 
-    /** Click the big "Add New Asset" button */
     async clickAddNewAsset() {
         await this.page.getByRole('button', { name: 'Add New Asset' }).click();
-        console.log('✅ Clicked Add New Asset');
     }
 
-    /** View the first asset in the table (open + close) */
     async viewFirstAsset() {
-        const actionId = await this.page.getByTestId(/action-asset-btn-/).first().getAttribute('data-testid');
-        if (!actionId) throw new Error('No assets found');
-
-        await this.page.getByTestId(actionId).click();
-        const viewId = actionId.replace('action-asset-btn-', 'view-asset-btn-');
-        await this.page.getByTestId(viewId).click();
+        await this.openRowAction('view');
         await this.page.getByRole('button', { name: 'Close' }).click();
-        console.log('✅ Asset viewed successfully');
     }
 
-    /** Open Manage MCare Packages for the first asset */
     async openManageMCareForFirstAsset() {
-        const actionId = await this.page.getByTestId(/action-asset-btn-/).first().getAttribute('data-testid');
-        if (!actionId) throw new Error('No assets found');
-
-        await this.page.getByTestId(actionId).click();
-        const mcareId = actionId.replace('action-asset-btn-', 'manage-mcare-packages-btn-');
-        await this.page.getByTestId(mcareId).click();
-        console.log('✅ Opened MCare Packages dialog');
+        await this.openRowAction('manage-mcare-packages');
     }
 
-    /** Edit the first asset (just changes location) */
     async editFirstAsset(newLocation: string) {
-        const actionId = await this.page.getByTestId(/action-asset-btn-/).first().getAttribute('data-testid');
-        if (!actionId) throw new Error('No assets found');
-
-        await this.page.getByTestId(actionId).click();
-        const editId = actionId.replace('action-asset-btn-', 'edit-asset-btn-');
-        await this.page.getByTestId(editId).click();
-
-        console.log(`Editing location to: ${newLocation}`);
-
-        // Wait for edit dialog/form to fully load
-        await this.page.waitForTimeout(1500);
+        await this.openRowAction('edit');
 
         const locationInput = this.page.getByRole('textbox', { name: 'Location' });
         await locationInput.fill(newLocation);
-        await locationInput.press('Tab');   // ← Triggers form validation (very important!)
+        await locationInput.press('Tab'); // trigger form validation
 
-        // Wait until Update button becomes enabled
-        const updateBtn = this.page.getByRole('button', { name: 'Update Asset' });
-        await updateBtn.waitFor({ state: 'visible', timeout: 10000 });
-
-        try {
-            await this.page.waitForFunction(
-                () => {
-                    const btn = document.querySelector('button:has-text("Update Asset")') as HTMLButtonElement;
-                    return btn && !btn.disabled;
-                },
-                { timeout: 8000 }
-            );
-            console.log('✅ Update button is now enabled');
-        } catch {
-            console.log('⚠️ Button still disabled → forcing click');
-        }
-
-        await updateBtn.click();
-        console.log(`✅ Asset updated with location: ${newLocation}`);
+        await this.page.getByRole('button', { name: 'Update Asset' }).click();
     }
 
-    /** Delete the first asset */
     async deleteFirstAsset() {
-        const actionId = await this.page.getByTestId(/action-asset-btn-/).first().getAttribute('data-testid');
+        await this.openRowAction('delete');
+        await this.page.getByRole('button', { name: 'Confirm & Delete' }).click();
+    }
+
+    /** Open the action menu for the first asset row and click the requested action. */
+    private async openRowAction(action: RowAction) {
+        const actionBtn = this.page.getByTestId(/action-asset-btn-/).first();
+        const actionId = await actionBtn.getAttribute('data-testid');
         if (!actionId) throw new Error('No assets found');
 
-        await this.page.getByTestId(actionId).click();
-        const deleteId = actionId.replace('action-asset-btn-', 'delete-asset-btn-');
-        await this.page.getByTestId(deleteId).click();
-        await this.page.getByRole('button', { name: 'Confirm & Delete' }).click();
-        console.log('✅ Asset deleted successfully');
-    }
+        await actionBtn.click();
 
+        const targetId = actionId.replace('action-asset-btn-', ACTION_TESTID_PREFIX[action]);
+        await this.page.getByTestId(targetId).click();
+    }
 }
