@@ -1,6 +1,4 @@
 import { Page, Locator, expect } from '@playwright/test';
-import * as fs from 'fs';
-import * as path from 'path';
 
 export class AssetsLiveData {
     readonly page: Page;
@@ -24,56 +22,63 @@ export class AssetsLiveData {
         await searchBar.focus();
         await searchBar.fill(searchTerm, { timeout: 10000 });
 
-    }
-
-    // Method to open Mpure live data
-    async openMpureLiveData() {
-        const menuButton: Locator = this.page.getByTestId('action-asset-btn-9412ab29-a0d8-4391-82a6-b054ab4ccfe3');
-        const viewLiveDataButton: Locator = this.page.getByTestId('view-live-data-btn-9412ab29-a0d8-4391-82a6-b054ab4ccfe3');
-
-        await menuButton.waitFor({ state: 'visible', timeout: 10000 });
-        await menuButton.click();
-        await viewLiveDataButton.click();
-
-    }
-
-    // Method to open Mprint live data
-    async openMprintLiveData() {
-        const menuButton: Locator = this.page.getByTestId('action-asset-btn-740aa0fc-b044-4c17-8ed5-c5a70a5ccc38');
-        const viewLiveDataButton: Locator = this.page.getByTestId('view-live-data-btn-740aa0fc-b044-4c17-8ed5-c5a70a5ccc38');
-
-        await menuButton.waitFor({ state: 'visible', timeout: 10000 });
-        await menuButton.click();
-        await viewLiveDataButton.click();
-
+        // Wait until at least one real asset row (with an action button) is rendered
+        await this.page
+            .getByTestId(/^action-asset-btn-/)
+            .first()
+            .waitFor({ state: 'visible', timeout: 15000 });
     }
 
     // Method to open Mpure logs
     async openMpureLogs() {
-        const menuButton: Locator = this.page.getByTestId('action-asset-btn-9412ab29-a0d8-4391-82a6-b054ab4ccfe3');
-        const viewLogsButton: Locator = this.page.getByTestId('view-asset-btn-9412ab29-a0d8-4391-82a6-b054ab4ccfe3');
-        const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
-
-        await menuButton.waitFor({ state: 'visible', timeout: 10000 });
-        await menuButton.click();
-        await viewLogsButton.click();
-        await hardwareLogsButton.waitFor({ state: 'visible', timeout: 10000 });
-        await hardwareLogsButton.click();
-
+        await this.openHardwareLogsForMachine('mpure');
     }
 
     // Method to open Mprint logs
     async openMprintLogs() {
-        const menuButton: Locator = this.page.getByTestId('action-asset-btn-740aa0fc-b044-4c17-8ed5-c5a70a5ccc38');
-        const viewLogsButton: Locator = this.page.getByTestId('view-asset-btn-740aa0fc-b044-4c17-8ed5-c5a70a5ccc38');
-        const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
+        await this.openHardwareLogsForMachine('mprint');
+    }
 
-        await menuButton.waitFor({ state: 'visible', timeout: 10000 });
-        await menuButton.click();
-        await viewLogsButton.click();
+    /**
+     * Opens the hardware logs view for the asset whose row matches the given
+     * machine type. The serial number search is fixed at the test level
+     * (always '00001'), and rows are disambiguated by the machine-type label
+     * rendered in the row — so this works across environments regardless of
+     * row ordering or seeded UUIDs.
+     */
+    private async openHardwareLogsForMachine(machineType: 'mpure' | 'mprint') {
+        const machineLabel = machineType === 'mpure' ? /mpure/i : /mprint/i;
+
+        const row: Locator = this.page
+            .getByRole('row')
+            .filter({ hasText: machineLabel })
+            .first();
+        await row.waitFor({ state: 'visible', timeout: 15000 });
+
+        const actionButton: Locator = row.getByTestId(/^action-asset-btn-/);
+        await actionButton.waitFor({ state: 'visible', timeout: 15000 });
+        await actionButton.scrollIntoViewIfNeeded();
+
+        const actionTestId = await actionButton.getAttribute('data-testid');
+        if (!actionTestId) {
+            throw new Error(`Unable to resolve action button testid for ${machineType} row`);
+        }
+
+        const viewTestId = actionTestId.replace('action-asset-btn-', 'view-asset-btn-');
+        const viewButton: Locator = this.page.getByTestId(viewTestId);
+
+        // Radix-style dropdowns occasionally swallow the first click while still
+        // animating in. Retry until the View item is actually visible.
+        await expect(async () => {
+            await actionButton.click();
+            await expect(viewButton).toBeVisible({ timeout: 2000 });
+        }).toPass({ timeout: 10000 });
+
+        await viewButton.click();
+
+        const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
         await hardwareLogsButton.waitFor({ state: 'visible', timeout: 10000 });
         await hardwareLogsButton.click();
-
     }
 
     async verifyHardwareLogs(searchId: number) {
@@ -287,26 +292,24 @@ export class AssetsLiveData {
     }
     // End of filter verification methods
 
-    // Method to verify full hardware log view
-    async verifyFullHardwareLog(machineType: 'mpure' | 'mprint') {
-        const rowName = machineType === 'mpure'
-            ? '5540 WARNING stepper/supply/'
-            : '22290 WARNING stepper/main/';
-        const viewFullLogButton: Locator = this.page.getByRole('row', { name: rowName }).getByLabel('View Details');
-        await viewFullLogButton.click();
+    // Method to verify full hardware log view.
+    //
+    // Always opens the first data row's details — the underlying records change
+    // continuously, so the test must not depend on a specific ID, severity, or
+    // component. We capture the row's message at runtime and assert the dialog
+    // heading matches it.
+    async verifyFullHardwareLog(_machineType: 'mpure' | 'mprint') {
+        const firstRow: Locator = this.page.getByRole('row').nth(1);
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
 
-        const dataPath = path.join(__dirname, '..', 'data', 'hardwareLog.json');
-        const allExpected = JSON.parse(fs.readFileSync(dataPath, 'utf-8')) as Record<
-            'mpure' | 'mprint',
-            { heading: string }
-        >;
-        const expected = allExpected[machineType];
+        const expectedMessage = (await this.getColumnValues(4))[0];
+        expect(expectedMessage, 'First row must expose a message to assert against').toBeTruthy();
 
-        await expect(this.page.getByRole('heading', { name: expected.heading })).toBeVisible();
-        const dismissButton: Locator = this.page.getByRole('button', { name: 'Dismiss' });
-        await dismissButton.click();
-        // Close Hardware logs popup
-        const closeButton: Locator = this.page.getByRole('button', { name: 'Close' });
-        await closeButton.click();
+        await firstRow.getByLabel('View Details').click();
+
+        await expect(this.page.getByRole('heading', { name: expectedMessage })).toBeVisible();
+
+        await this.page.getByRole('button', { name: 'Dismiss' }).click();
+        await this.page.getByRole('button', { name: 'Close' }).click();
     }
 }

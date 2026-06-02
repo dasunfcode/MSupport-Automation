@@ -1,20 +1,17 @@
 import { Page, Locator, expect } from '@playwright/test';
 
+const TAB_NAMES = ['Organizations', 'users', 'Assets', 'tickets'] as const;
+type TabName = typeof TAB_NAMES[number];
+
 export class LogsPage {
   readonly page: Page;
-
-  readonly organizationsTab: Locator;
-  readonly usersTab: Locator;
-  readonly assetsTab: Locator;
-  readonly ticketsTab: Locator;
+  readonly tabs: Record<TabName, Locator>;
 
   constructor(page: Page) {
     this.page = page;
-
-    this.organizationsTab = page.getByRole('button', { name: 'Organizations' });
-    this.usersTab = page.getByRole('button', { name: 'users' });
-    this.assetsTab = page.getByRole('button', { name: 'Assets' });
-    this.ticketsTab = page.getByRole('button', { name: 'tickets' });
+    this.tabs = Object.fromEntries(
+      TAB_NAMES.map((name) => [name, page.getByRole('button', { name })])
+    ) as Record<TabName, Locator>;
   }
 
   async goto() {
@@ -23,9 +20,6 @@ export class LogsPage {
   }
 
   async expectAllTabsVisible() {
-    await expect(this.organizationsTab).toBeVisible();
-    await expect(this.usersTab).toBeVisible();
-    await expect(this.assetsTab).toBeVisible();
-    await expect(this.ticketsTab).toBeVisible();
+    await Promise.all(TAB_NAMES.map((name) => expect(this.tabs[name]).toBeVisible()));
   }
 }

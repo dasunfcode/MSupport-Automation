@@ -1,14 +1,15 @@
 import { Page, Locator, expect } from '@playwright/test';
 
+const GOTO_TIMEOUT = 60_000;
+const OTP_TIMEOUT = 30_000;
+
 export class LoginPage {
-  readonly page: Page;
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly otpInput: Locator;
 
-  constructor(page: Page) {
-    this.page = page;
+  constructor(readonly page: Page) {
     this.emailInput = page.locator('input[name="email"]');
     this.passwordInput = page.locator('input[name="password"]');
     this.loginButton = page.getByRole('button', { name: 'Login' });
@@ -18,7 +19,7 @@ export class LoginPage {
   async goto(baseUrl: string) {
     await this.page.goto(`${baseUrl}/login`, {
       waitUntil: 'domcontentloaded',
-      timeout: 60000,
+      timeout: GOTO_TIMEOUT,
     });
   }
 
@@ -33,7 +34,7 @@ export class LoginPage {
   }
 
   async enterOtp(otp: string) {
-    await expect(this.otpInput).toBeVisible({ timeout: 30000 });
+    await expect(this.otpInput).toBeVisible({ timeout: OTP_TIMEOUT });
     await this.otpInput.focus();
     await this.page.keyboard.type(otp);
   }

@@ -68,7 +68,9 @@ export class TicketPage {
     await this.ticketTypeSection().getByText('Problem', { exact: true }).click();
     await this.classifySection().getByText('Failure Without Downtime', { exact: true }).click();
     await this.selectAssetButton().click();
-    await this.page.getByRole('option').nth(1).click();
+    const firstAssetOption = this.page.getByRole('option').first();
+    await firstAssetOption.waitFor({ state: 'visible', timeout: 10000 });
+    await firstAssetOption.click();
     await this.descriptionTextarea().fill('This is an automated description.');
 
     if (adminType === 'Global Admin') {

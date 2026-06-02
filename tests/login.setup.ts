@@ -1,30 +1,22 @@
-import { test } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { getOtpFromEmail } from '../utils/emailOtpReader';
+import { test } from '../fixtures/fixtures';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-test('MSUP-AUTH-TC001_user should login successfully using email OTP', async ({ page }) => {
-  test.setTimeout(90000);
+const { BASE_URL = '', EMAIL = '', PASSWORD = '', AUTH_JSON_PATH = '' } = process.env;
 
-  const loginPage = new LoginPage(page);
+test('MSUP-AUTH-TC001_user should login successfully using email OTP', async ({ loginPage, page }) => {
+  test.setTimeout(90_000);
 
-  await loginPage.goto(process.env.BASE_URL || '');
+  await loginPage.goto(BASE_URL);
   await loginPage.verifyTitle();
-  
 
-  await loginPage.login(
-    process.env.EMAIL || '',
-    process.env.PASSWORD || ''
-  );
+  await loginPage.login(EMAIL, PASSWORD);
 
   // const otp = await getOtpFromEmail();
   // await loginPage.enterOtp(otp.toString());
 
   await loginPage.verifyDashboard();
 
-  await page.context().storageState({
-    path: process.env.AUTH_JSON_PATH || '',
-  });
+  await page.context().storageState({ path: AUTH_JSON_PATH });
 });

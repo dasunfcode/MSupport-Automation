@@ -1,12 +1,8 @@
-import { test } from '@playwright/test';
-import { LogsPage } from '../pages/LogsPage';
+import { test } from '../fixtures/fixtures';
 
 test.describe.serial('Logs Page Tests', () => {
 
-  test('MSUP-LOGS-TC012_Should_display_all_log_tabs', async ({ page }) => {
-    const logsPage = new LogsPage(page);
-
-    await logsPage.goto();
+  test('MSUP-LOGS-TC012_Should_display_all_log_tabs', async ({ logsPage }) => {
     await logsPage.expectAllTabsVisible();
   });
 

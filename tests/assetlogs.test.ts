@@ -2,9 +2,11 @@ import { test } from '../fixtures/fixtures';
 
 test.describe.configure({ mode: 'serial' });
 
+const SERIAL_SEARCH = '00001';
+
 test('Verify navigation to assets page and search by serial number', async ({ assetsLiveData }) => {
     await assetsLiveData.navigateToAssetsPage();
-    await assetsLiveData.searchAssetsBySerialNumber('00001');
+    await assetsLiveData.searchAssetsBySerialNumber(SERIAL_SEARCH);
 });
 
 test('Verify that MPure Hardware logs open and verify table details', async ({ assetsLiveData }) => {
