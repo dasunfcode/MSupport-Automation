@@ -267,7 +267,7 @@ export class AssetsLiveData {
         }
 
         // Reset filters after verification
-        if (machineType == 'mpure') {
+        if (machineType == '') {
             const resetFiltersButton: Locator = this.page.getByRole('button').nth(5);
             await resetFiltersButton.click();
         } else {

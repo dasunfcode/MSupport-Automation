@@ -48,16 +48,31 @@ export default defineConfig({
     },
 
     /**
-     * Main test project
-     * Uses stored auth state
+     * Asset logs tests — must run before the rest of the suite
+     * so cache/storage cleanup happens against a known baseline.
      */
     {
-      name: 'chromium',
+      name: 'assetlogs',
+      testMatch: /assetlogs\.test\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: process.env.AUTH_JSON_PATH || 'auth.json',
       },
       dependencies: ['setup'],
+    },
+
+    /**
+     * Main test project
+     * Uses stored auth state
+     */
+    {
+      name: 'chromium',
+      testIgnore: /assetlogs\.test\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: process.env.AUTH_JSON_PATH || 'auth.json',
+      },
+      dependencies: ['setup', 'assetlogs'],
     },
   ],
 

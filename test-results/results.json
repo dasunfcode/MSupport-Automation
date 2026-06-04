@@ -38,10 +38,28 @@
         "metadata": {
           "actualWorkers": 1
         },
+        "id": "assetlogs",
+        "name": "assetlogs",
+        "testDir": "D:/MSupport/MSupport-Automation/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/assetlogs\\.test\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/MSupport/MSupport-Automation/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "D:/MSupport/MSupport-Automation/tests",
-        "testIgnore": [],
+        "testIgnore": [
+          "/assetlogs\\.test\\.ts/"
+        ],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
@@ -82,6 +100,252 @@
   },
   "suites": [
     {
+      "title": "assetlogs.test.ts",
+      "file": "assetlogs.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Verify navigation to assets page and search by serial number",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:26.900Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-95f487bf987faa0670ce",
+          "file": "assetlogs.test.ts",
+          "line": 7,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPure Hardware logs open and verify table details",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2283,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:31.493Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-89a9b5077999828b3e41",
+          "file": "assetlogs.test.ts",
+          "line": 13,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPure Hardware logs sorting, pagination and filters work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17482,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:33.810Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-d203323b7cc2e784c8aa",
+          "file": "assetlogs.test.ts",
+          "line": 18,
+          "column": 5
+        },
+        {
+          "title": "Verify that full MPure hardware log details are visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1752,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:51.332Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-9c2fc54ec04e2010dbfb",
+          "file": "assetlogs.test.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPrint Hardware logs open and verify table details",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2315,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:53.136Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-d8dbd2e0375c5fa25c13",
+          "file": "assetlogs.test.ts",
+          "line": 36,
+          "column": 5
+        },
+        {
+          "title": "Verify that MPrint Hardware logs sorting, pagination and filters work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16444,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:41:55.474Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-dbc56227fb0d7e61c8a9",
+          "file": "assetlogs.test.ts",
+          "line": 41,
+          "column": 5
+        },
+        {
+          "title": "Verify that full MPrint hardware log details are visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "assetlogs",
+              "projectName": "assetlogs",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1469,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-04T09:42:11.948Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "041d4c1e2e0d9388b576-6fa1948e40e4f10a75e2",
+          "file": "assetlogs.test.ts",
+          "line": 55,
+          "column": 5
+        }
+      ]
+    },
+    {
       "title": "login.setup.ts",
       "file": "login.setup.ts",
       "column": 0,
@@ -103,12 +367,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4455,
+                  "duration": 5378,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-06-04T07:53:08.681Z",
+                  "startTime": "2026-06-04T09:41:19.343Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -149,10 +413,10 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14166,
+                      "duration": 14650,
                       "errors": [],
                       "stdout": [
                         {
@@ -173,7 +437,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:53:14.938Z",
+                      "startTime": "2026-06-04T09:42:15.003Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -199,15 +463,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4671,
+                      "duration": 4930,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:53:29.398Z",
+                      "startTime": "2026-06-04T09:42:29.888Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -222,7 +486,7 @@
             },
             {
               "title": "TC004c_Manage_MCare_Packages",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -233,64 +497,36 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
-                      "status": "timedOut",
-                      "duration": 62544,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "D:\\MSupport\\MSupport-Automation\\pages\\AssetMCareDialog.ts",
-                            "column": 14,
-                            "line": 41
-                          },
-                          "message": "Error: locator.fill: Target page, context or browser has been closed\n\n\u001b[90m   at \u001b[39m..\\pages\\AssetMCareDialog.ts:41\n\n\u001b[0m \u001b[90m 39 |\u001b[39m             \u001b[33m.\u001b[39mlocator(\u001b[32m'input[placeholder=\"DD/MM/YYYY\"]'\u001b[39m)\n \u001b[90m 40 |\u001b[39m             \u001b[33m.\u001b[39mfirst()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 41 |\u001b[39m             \u001b[33m.\u001b[39mfill(formattedDate)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 42 |\u001b[39m\n \u001b[90m 43 |\u001b[39m         \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'Add'\u001b[39m })\u001b[33m.\u001b[39mnth(\u001b[35m1\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m(() \u001b[33m=>\u001b[39m { })\u001b[33m;\u001b[39m\n \u001b[90m 44 |\u001b[39m     }\u001b[0m\n\u001b[2m    at AssetMCareDialog.addYearlyMaintenance (D:\\MSupport\\MSupport-Automation\\pages\\AssetMCareDialog.ts:41:14)\u001b[22m\n\u001b[2m    at D:\\MSupport\\MSupport-Automation\\tests\\assetcrud.spec.ts:33:32\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 10229,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "📦 Adding MCare package\n"
+                          "text": "Adding MCare package\n"
                         },
                         {
-                          "text": "📅 Adding Yearly Maintenance\n"
+                          "text": "Add button disabled — closing MCare dialog and updating Reference Date\n"
+                        },
+                        {
+                          "text": "Reopening MCare dialog for the same asset\n"
+                        },
+                        {
+                          "text": "Adding Yearly Maintenance\n"
+                        },
+                        {
+                          "text": "MCare packages updated\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:53:34.088Z",
+                      "startTime": "2026-06-04T09:42:34.834Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "D:\\MSupport\\MSupport-Automation\\test-results\\assetcrud-Asset-CRUD-flow--63cb0-C004c-Manage-MCare-Packages-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "D:\\MSupport\\MSupport-Automation\\test-results\\assetcrud-Asset-CRUD-flow--63cb0-C004c-Manage-MCare-Packages-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\MSupport\\MSupport-Automation\\test-results\\assetcrud-Asset-CRUD-flow--63cb0-C004c-Manage-MCare-Packages-chromium\\error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "D:\\MSupport\\MSupport-Automation\\test-results\\assetcrud-Asset-CRUD-flow--63cb0-C004c-Manage-MCare-Packages-chromium\\trace.zip"
-                        }
-                      ]
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "fa740943cd08eddc7068-fbdb3c93d1dbbba21c68",
@@ -311,20 +547,20 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5411,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:54:37.034Z",
+                      "startTime": "2026-06-04T09:42:45.081Z",
                       "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "fa740943cd08eddc7068-982d8f47c0f927afedbf",
@@ -345,20 +581,20 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7919,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:54:37.035Z",
+                      "startTime": "2026-06-04T09:42:50.510Z",
                       "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "fa740943cd08eddc7068-3ba097fa05931d2134dd",
@@ -367,252 +603,6 @@
               "column": 9
             }
           ]
-        }
-      ]
-    },
-    {
-      "title": "assetlogs.test.ts",
-      "file": "assetlogs.test.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "Verify navigation to assets page and search by serial number",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2337,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:54:38.148Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-4b5c2f64201ba21ee95f",
-          "file": "assetlogs.test.ts",
-          "line": 7,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPure Hardware logs open and verify table details",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 5065,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:54:41.426Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-de8215d780113e9f766d",
-          "file": "assetlogs.test.ts",
-          "line": 12,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPure Hardware logs sorting, pagination and filters work",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 17827,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:54:46.521Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-c85a8ecaf3dd913364be",
-          "file": "assetlogs.test.ts",
-          "line": 17,
-          "column": 5
-        },
-        {
-          "title": "Verify that full MPure hardware log details are visible",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1949,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:55:04.387Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-3b5b7345d515e589d1f6",
-          "file": "assetlogs.test.ts",
-          "line": 31,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPrint Hardware logs open and verify table details",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2407,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:55:06.377Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-b46f97734f6d2febfc99",
-          "file": "assetlogs.test.ts",
-          "line": 35,
-          "column": 5
-        },
-        {
-          "title": "Verify that MPrint Hardware logs sorting, pagination and filters work",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 17565,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:55:08.810Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-156ac032d134043eb88a",
-          "file": "assetlogs.test.ts",
-          "line": 40,
-          "column": 5
-        },
-        {
-          "title": "Verify that full MPrint hardware log details are visible",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1899,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-06-04T07:55:26.402Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "041d4c1e2e0d9388b576-80d32bb5bdf287db739f",
-          "file": "assetlogs.test.ts",
-          "line": 54,
-          "column": 5
         }
       ]
     },
@@ -645,12 +635,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3262,
+                      "duration": 3195,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:28.351Z",
+                      "startTime": "2026-06-04T09:42:58.462Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -696,12 +686,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5387,
+                      "duration": 5094,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:31.673Z",
+                      "startTime": "2026-06-04T09:43:01.683Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -730,12 +720,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3117,
+                      "duration": 3217,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:37.103Z",
+                      "startTime": "2026-06-04T09:43:06.794Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -764,12 +754,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3919,
+                      "duration": 4033,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:40.253Z",
+                      "startTime": "2026-06-04T09:43:10.024Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -798,12 +788,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5985,
+                      "duration": 5713,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:44.203Z",
+                      "startTime": "2026-06-04T09:43:14.071Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -832,12 +822,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4553,
+                      "duration": 4575,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:50.219Z",
+                      "startTime": "2026-06-04T09:43:19.798Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -883,12 +873,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1861,
+                      "duration": 1454,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:54.847Z",
+                      "startTime": "2026-06-04T09:43:24.405Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -917,12 +907,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 123,
+                      "duration": 90,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:59.190Z",
+                      "startTime": "2026-06-04T09:43:29.760Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -951,12 +941,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 90,
+                      "duration": 143,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:59.366Z",
+                      "startTime": "2026-06-04T09:43:29.881Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -985,12 +975,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2230,
+                      "duration": 2792,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:55:59.558Z",
+                      "startTime": "2026-06-04T09:43:30.043Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1019,12 +1009,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2361,
+                      "duration": 1751,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:02.008Z",
+                      "startTime": "2026-06-04T09:43:32.864Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1061,12 +1051,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2249,
+                      "duration": 3115,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:04.479Z",
+                      "startTime": "2026-06-04T09:43:34.720Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1095,12 +1085,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 89,
+                      "duration": 82,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:11.932Z",
+                      "startTime": "2026-06-04T09:43:42.301Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1129,12 +1119,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 99,
+                      "duration": 106,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:12.086Z",
+                      "startTime": "2026-06-04T09:43:42.412Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1163,12 +1153,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2938,
+                      "duration": 2986,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:12.295Z",
+                      "startTime": "2026-06-04T09:43:42.544Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1205,12 +1195,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1796,
+                      "duration": 1466,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:15.425Z",
+                      "startTime": "2026-06-04T09:43:45.620Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1239,12 +1229,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 90,
+                      "duration": 86,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:21.493Z",
+                      "startTime": "2026-06-04T09:43:52.437Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1273,12 +1263,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 116,
+                      "duration": 152,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:21.621Z",
+                      "startTime": "2026-06-04T09:43:52.556Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1307,12 +1297,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2363,
+                      "duration": 2541,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-04T07:56:21.890Z",
+                      "startTime": "2026-06-04T09:43:52.744Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1332,11 +1322,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-06-04T07:53:07.567Z",
-    "duration": 197487.56699999998,
-    "expected": 29,
-    "skipped": 2,
-    "unexpected": 1,
+    "startTime": "2026-06-04T09:41:18.072Z",
+    "duration": 157945.05099999998,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
     "flaky": 0
   }
 }

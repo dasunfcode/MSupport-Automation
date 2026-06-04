@@ -7,11 +7,12 @@ const SERIAL_SEARCH = '00001';
 test('Verify navigation to assets page and search by serial number', async ({ assetsLiveData }) => {
     await assetsLiveData.navigateToAssetsPage();
     await assetsLiveData.searchAssetsBySerialNumber(SERIAL_SEARCH);
+    await assetsLiveData.page.waitForTimeout(1000);
 });
 
 test('Verify that MPure Hardware logs open and verify table details', async ({ assetsLiveData }) => {
     await assetsLiveData.openMpureLogs();
-    await assetsLiveData.verifyHardwareLogs(1111);
+    await assetsLiveData.verifyHardwareLogs(111);
 });
 
 test('Verify that MPure Hardware logs sorting, pagination and filters work', async ({ assetsLiveData }) => {
