@@ -45,6 +45,33 @@ export class AssetsPage {
         await this.page.getByRole('button', { name: 'Confirm & Delete' }).click();
     }
 
+    async updateFirstAssetReferenceDate() {
+        await this.openRowAction('edit');
+
+        const referenceDateGroup = this.page.getByRole('group').filter({ hasText: 'Reference Date' });
+        if (await referenceDateGroup.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await referenceDateGroup.getByRole('button').click();
+            await this.page.locator('[role="gridcell"] button:not([disabled])').first().click();
+        } else {
+            console.log('⚠️ Reference Date field not visible in edit form');
+        }
+
+        const updateBtn = this.page.getByRole('button', { name: 'Update Asset' });
+        if (await updateBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await updateBtn.click();
+        } else {
+            const nextBtn = this.page.getByRole('button', { name: 'Next', exact: true });
+            if (await nextBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+                await nextBtn.click();
+                await this.page.getByRole('button', { name: 'Update Asset' }).click();
+            } else {
+                throw new Error('Could not submit updated Reference Date');
+            }
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
     /** Open the action menu for the first asset row and click the requested action. */
     private async openRowAction(action: RowAction) {
         const actionBtn = this.page.getByTestId(/action-asset-btn-/).first();

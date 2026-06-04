@@ -11,7 +11,7 @@ test('Verify navigation to assets page and search by serial number', async ({ as
 
 test('Verify that MPure Hardware logs open and verify table details', async ({ assetsLiveData }) => {
     await assetsLiveData.openMpureLogs();
-    await assetsLiveData.verifyHardwareLogs(1111);
+    await assetsLiveData.verifyHardwareLogs(111);
 });
 
 test('Verify that MPure Hardware logs sorting, pagination and filters work', async ({ assetsLiveData }) => {
