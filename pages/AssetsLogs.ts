@@ -31,19 +31,12 @@ export class AssetsLiveData {
 
     // Method to open Mpure logs
     async openMpureLogs() {
-        await this.goToAssetsAndSearch('00001');
         await this.openHardwareLogsForMachine('mpure');
     }
 
     // Method to open Mprint logs
     async openMprintLogs() {
-        await this.goToAssetsAndSearch('00001');
         await this.openHardwareLogsForMachine('mprint');
-    }
-
-    private async goToAssetsAndSearch(searchTerm: string) {
-        await this.navigateToAssetsPage();
-        await this.searchAssetsBySerialNumber(searchTerm);
     }
 
     /**
