@@ -1,112 +1,111 @@
-// ticketPage.ts
 import { Page, Locator, expect } from '@playwright/test';
 
-export class TicketPage {
-  readonly page: Page;
+const DEFAULT_TIMEOUT = 10_000;
+const MENU_OPEN_TIMEOUT = 15_000;
+const DESCRIPTION = 'This is an automated description.';
 
-  constructor(page: Page) {
-    this.page = page;
+export class TicketPage {
+  readonly addTicketButton: Locator;
+  readonly nameInput: Locator;
+  readonly ticketTypeSection: Locator;
+  readonly classifySection: Locator;
+  readonly selectAssetButton: Locator;
+  readonly escalateButton: Locator;
+  readonly descriptionTextarea: Locator;
+  readonly createButton: Locator;
+  readonly updateButton: Locator;
+  readonly confirmDeleteButton: Locator;
+  readonly searchInput: Locator;
+
+  constructor(readonly page: Page) {
+    this.addTicketButton = page.getByText('Add a Ticket');
+    this.nameInput = page.getByLabel('Name');
+    this.ticketTypeSection = page.locator('text=Select Ticket Type').locator('..');
+    this.classifySection = page.locator('text=Classify Issue').locator('..');
+    this.selectAssetButton = page.getByText('Select asset', { exact: true });
+    this.escalateButton = page.locator('.peer.h-4');
+    this.descriptionTextarea = page.locator('textarea[name="description"]');
+    this.createButton = page.getByRole('button', { name: 'Create Ticket' });
+    this.updateButton = page.getByRole('button', { name: 'Update Ticket' });
+    this.confirmDeleteButton = page.getByRole('button', { name: 'Confirm & Delete' });
+    this.searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
   }
 
   async goto() {
     await this.page.goto('/dashboard/tickets');
   }
 
-  // Locators
-  addTicketButton() { return this.page.getByText('Add a Ticket'); }
-  nameInput() { return this.page.getByLabel('Name'); }
-  ticketTypeSection() { return this.page.locator('text=Select Ticket Type').locator('..'); }
-  classifySection() { return this.page.locator('text=Classify Issue').locator('..'); }
-  selectAssetButton() { return this.page.getByText('Select asset', { exact: true }); }
-  escalateButton() { return this.page.locator('.peer.h-4'); }
-  descriptionTextarea() { return this.page.locator('textarea[name="description"]'); }
-  createButton() { return this.page.getByRole('button', { name: 'Create Ticket' }); }
-  updateButton() { return this.page.getByRole('button', { name: 'Update Ticket' }); }
-  confirmDeleteButton() { return this.page.getByRole('button', { name: 'Confirm & Delete' }); }
-  searchInput() { return this.page.getByPlaceholder('Search by Ticket ID, Name, Type...'); }
-
-
-  ticketRow(ticketName: string) {
+  ticketRow(ticketName: string): Locator {
     return this.page.locator('tr', { hasText: ticketName });
   }
 
-  // Menu helper
+  // Opens the row's kebab menu and clicks the requested item, retrying the
+  // trigger if the first click is swallowed by a focus/hydration race.
   async openMenuAndClick(row: Locator, menuItemName: string) {
-    console.log(`Clicking Open menu for "${menuItemName}"`);
+    await expect(row).toBeVisible({ timeout: DEFAULT_TIMEOUT });
 
-    // Wait for the row to settle so the trigger doesn't get re-rendered mid-click.
-    await expect(row).toBeVisible({ timeout: 10000 });
     const menuButton = row.getByRole('button', { name: 'Open menu' }).first();
-    await expect(menuButton).toBeVisible({ timeout: 10000 });
-    await expect(menuButton).toBeEnabled({ timeout: 10000 });
+    await expect(menuButton).toBeEnabled({ timeout: DEFAULT_TIMEOUT });
 
     const dropdown = this.page.locator('[role="menu"]').first();
     const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
 
-    // Retry the open: sometimes the first click is swallowed (focus/hydration race),
-    // so re-click the trigger until the menu actually renders the target item.
     await expect(async () => {
       if (!(await dropdown.isVisible())) {
         await menuButton.click();
       }
       await expect(menuItem).toBeVisible({ timeout: 2000 });
-    }).toPass({ timeout: 15000, intervals: [250, 500, 1000] });
+    }).toPass({ timeout: MENU_OPEN_TIMEOUT, intervals: [250, 500, 1000] });
 
     await menuItem.click();
 
-    // Confirm the menu actually closed; if not, the click missed — retry once.
     if (await dropdown.isVisible().catch(() => false)) {
       await menuItem.click({ force: true });
     }
-    await expect(dropdown).toBeHidden({ timeout: 5000 });
+    await expect(dropdown).toBeHidden({ timeout: 5_000 });
   }
 
-  // Actions
   async addTicket(name: string, adminType: string) {
-    await this.addTicketButton().click();
-    await this.nameInput().fill(name);
-    await this.ticketTypeSection().getByText('Problem', { exact: true }).click();
-    await this.classifySection().getByText('Failure Without Downtime', { exact: true }).click();
-    await this.selectAssetButton().click();
+    await this.addTicketButton.click();
+    await this.nameInput.fill(name);
+    await this.ticketTypeSection.getByText('Problem', { exact: true }).click();
+    await this.classifySection.getByText('Failure Without Downtime', { exact: true }).click();
+
+    await this.selectAssetButton.click();
     const firstAssetOption = this.page.getByRole('option').first();
-    await firstAssetOption.waitFor({ state: 'visible', timeout: 10000 });
+    await firstAssetOption.waitFor({ state: 'visible', timeout: DEFAULT_TIMEOUT });
     await firstAssetOption.click();
-    await this.descriptionTextarea().fill('This is an automated description.');
+
+    await this.descriptionTextarea.fill(DESCRIPTION);
 
     if (adminType === 'Global Admin') {
-      await expect(this.escalateButton()).not.toBeVisible();
+      await expect(this.escalateButton).not.toBeVisible();
     } else {
-      await this.escalateButton().click();
+      await this.escalateButton.click();
     }
 
-    await this.createButton().click();
-    console.log('Ticket added');
+    await this.createButton.click();
   }
 
-  async searchTicket(name: string) {
-    await this.searchInput().fill(name);
-    const row = this.ticketRow(name);
-    // await expect(row).toBeVisible();
-    console.log('Ticket search/view successful');
-    return row;
+  async searchTicket(name: string): Promise<Locator> {
+    await this.searchInput.fill(name);
+    return this.ticketRow(name);
   }
 
   async editTicket(oldName: string, newName: string) {
     const row = await this.searchTicket(oldName);
     await this.openMenuAndClick(row, 'Edit Ticket');
-    await this.nameInput().fill(newName);
-    await this.updateButton().click();
-    await this.searchInput().fill(newName);
+    await this.nameInput.fill(newName);
+    await this.updateButton.click();
+    await this.searchInput.fill(newName);
     await expect(this.ticketRow(newName)).toBeVisible();
-    console.log('Ticket edited');
   }
 
   async deleteTicket(name: string) {
     const row = await this.searchTicket(name);
     await this.openMenuAndClick(row, 'Delete Ticket');
-    await this.confirmDeleteButton().click();
-    await this.searchInput().fill(name);
+    await this.confirmDeleteButton.click();
+    await this.searchInput.fill(name);
     await expect(this.ticketRow(name)).toHaveCount(0);
-    console.log('Ticket deleted');
   }
 }
