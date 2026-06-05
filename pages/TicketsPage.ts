@@ -94,6 +94,7 @@ export class TicketPage {
 
   async editTicket(oldName: string, newName: string) {
     const row = await this.searchTicket(oldName);
+    await expect(row).toBeVisible({ timeout: DEFAULT_TIMEOUT });
     await this.openMenuAndClick(row, 'Edit Ticket');
     await this.nameInput.fill(newName);
     await this.updateButton.click();
