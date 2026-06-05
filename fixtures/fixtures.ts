@@ -93,4 +93,10 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     ],
 });
 
+// Clear cookies and permissions after each test to keep browser state isolated.
+test.afterEach(async ({ page }) => {
+    await page.context().clearCookies();
+    await page.context().clearPermissions();
+});
+
 export { expect } from '@playwright/test';

@@ -251,6 +251,7 @@ export class AssetsLiveData {
 
         // Verify the first row matches the selected filters
         const rowCount = await this.getDataRowCount();
+        await this.page.waitForTimeout(1000);
         expect(rowCount, 'Filtered results should contain at least one row').toBeGreaterThan(0);
 
         if (filters.severity) {
