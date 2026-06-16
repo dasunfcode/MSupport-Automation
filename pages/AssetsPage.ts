@@ -10,7 +10,7 @@ const ACTION_TESTID_PREFIX: Record<RowAction, string> = {
 };
 
 export class AssetsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { }
 
     async navigateTo() {
         await this.page.goto('/dashboard/assets');
@@ -22,8 +22,18 @@ export class AssetsPage {
     }
 
     async viewFirstAsset() {
-        await this.openRowAction('view');
-        await this.page.getByRole('button', { name: 'Close' }).click();
+        // Open split view by clicking the first row
+        const firstRow = this.page.getByRole('row').nth(1);
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+        await firstRow.click();
+
+        // Wait for split view to appear (optional stability step)
+        await this.page.waitForTimeout(500);
+
+        // Close split view
+        const closeBtn = this.page.locator('[data-slot="sheet-close"]').first();
+        await closeBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await closeBtn.click();
     }
 
     async openManageMCareForFirstAsset() {
@@ -31,12 +41,24 @@ export class AssetsPage {
     }
 
     async editFirstAsset(newLocation: string) {
-        await this.openRowAction('edit');
+        // 1. Open split view by clicking the row
+        const firstRow = this.page.getByRole('row').nth(1);
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+        await firstRow.click();
 
+        await this.page.waitForTimeout(500);
+
+        // 2. Click Edit button inside split view
+        const editBtn = this.page.getByRole('button', { name: 'Edit Asset' });
+        await editBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await editBtn.click();
+
+        // 3. Edit field
         const locationInput = this.page.getByRole('textbox', { name: 'Location' });
         await locationInput.fill(newLocation);
-        await locationInput.press('Tab'); // trigger form validation
+        await locationInput.press('Tab');
 
+        // 4. Save
         await this.page.getByRole('button', { name: 'Update Asset' }).click();
     }
 
@@ -46,21 +68,45 @@ export class AssetsPage {
     }
 
     async updateFirstAssetReferenceDate() {
-        await this.openRowAction('edit');
+        // 1. Open split view by clicking row
+        const firstRow = this.page.getByRole('row').nth(1);
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+        await firstRow.click();
 
-        const referenceDateGroup = this.page.getByRole('group').filter({ hasText: 'Reference Date' });
+        await this.page.waitForTimeout(500);
+
+        const editBtn = this.page.getByRole('button', { name: 'Edit Asset' });
+
+        await editBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await editBtn.click();
+
+        // 2. Find Reference Date section inside sheet
+        const referenceDateGroup = this.page
+            .getByRole('group')
+            .filter({ hasText: 'Reference Date' });
+
         if (await referenceDateGroup.isVisible({ timeout: 3000 }).catch(() => false)) {
             await referenceDateGroup.getByRole('button').click();
-            await this.page.locator('[role="gridcell"] button:not([disabled])').first().click();
+
+            await this.page
+                .locator('[role="gridcell"] button:not([disabled])')
+                .first()
+                .click();
         } else {
-            console.log('⚠️ Reference Date field not visible in edit form');
+            console.log('⚠️ Reference Date field not visible in split view');
         }
 
+        // 3. Save
         const updateBtn = this.page.getByRole('button', { name: 'Update Asset' });
+
         if (await updateBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
             await updateBtn.click();
         } else {
-            const nextBtn = this.page.getByRole('button', { name: 'Next', exact: true });
+            const nextBtn = this.page.getByRole('button', {
+                name: 'Next',
+                exact: true,
+            });
+
             if (await nextBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
                 await nextBtn.click();
                 await this.page.getByRole('button', { name: 'Update Asset' }).click();
@@ -68,6 +114,11 @@ export class AssetsPage {
                 throw new Error('Could not submit updated Reference Date');
             }
         }
+
+        // Close split view
+        const closeBtn = this.page.locator('[data-slot="sheet-close"]').first();
+        await closeBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await closeBtn.click();
 
         await this.page.waitForTimeout(1000);
     }
