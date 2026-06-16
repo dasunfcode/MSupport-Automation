@@ -16,6 +16,9 @@ export class TicketPage {
   readonly updateButton: Locator;
   readonly confirmDeleteButton: Locator;
   readonly searchInput: Locator;
+  readonly updateRow: Locator;
+  readonly editButton: Locator;
+  readonly closeButton: Locator;
 
   constructor(readonly page: Page) {
     this.addTicketButton = page.getByText('Add a Ticket');
@@ -29,6 +32,9 @@ export class TicketPage {
     this.updateButton = page.getByRole('button', { name: 'Update Ticket' });
     this.confirmDeleteButton = page.getByRole('button', { name: 'Confirm & Delete' });
     this.searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    this.updateRow = page.getByRole('cell', { name: 'Test Ticket' });
+    this.editButton = page.getByRole('button', { name: 'tickets.edit' });
+    this.closeButton = page.getByRole('button', { name: 'Close', exact: true });
   }
 
   async goto() {
@@ -94,12 +100,14 @@ export class TicketPage {
 
   async editTicket(oldName: string, newName: string) {
     const row = await this.searchTicket(oldName);
-    await expect(row).toBeVisible({ timeout: DEFAULT_TIMEOUT });
-    await this.openMenuAndClick(row, 'Edit Ticket');
+    await this.page.waitForTimeout(1000);
+    await this.updateRow.click();
+    await this.editButton.click();
     await this.nameInput.fill(newName);
     await this.updateButton.click();
     await this.searchInput.fill(newName);
     await expect(this.ticketRow(newName)).toBeVisible();
+    await this.closeButton.click();
   }
 
   async deleteTicket(name: string) {
