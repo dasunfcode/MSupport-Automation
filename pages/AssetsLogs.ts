@@ -57,41 +57,6 @@ export class AssetsLiveData {
         await hardwareLogsButton.click();
     }
 
-    // private async openHardwareLogsForMachine(machineType: 'mpure' | 'mprint') {
-    //     const machineLabel = machineType === 'mpure' ? /mpure/i : /mprint/i;
-
-    //     const row: Locator = this.page
-    //         .getByRole('row')
-    //         .filter({ hasText: machineLabel })
-    //         .first();
-    //     await row.waitFor({ state: 'visible', timeout: 15000 });
-
-    //     const actionButton: Locator = row.getByTestId(/^action-asset-btn-/);
-    //     await actionButton.waitFor({ state: 'visible', timeout: 15000 });
-    //     await actionButton.scrollIntoViewIfNeeded();
-
-    //     const actionTestId = await actionButton.getAttribute('data-testid');
-    //     if (!actionTestId) {
-    //         throw new Error(`Unable to resolve action button testid for ${machineType} row`);
-    //     }
-
-    //     const viewTestId = actionTestId.replace('action-asset-btn-', 'view-asset-btn-');
-    //     const viewButton: Locator = this.page.getByTestId(viewTestId);
-
-    //     // Radix-style dropdowns occasionally swallow the first click while still
-    //     // animating in. Retry until the View item is actually visible.
-    //     await expect(async () => {
-    //         await actionButton.click();
-    //         await expect(viewButton).toBeVisible({ timeout: 2000 });
-    //     }).toPass({ timeout: 10000 });
-
-    //     await viewButton.click();
-
-    //     const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
-    //     await hardwareLogsButton.waitFor({ state: 'visible', timeout: 10000 });
-    //     await hardwareLogsButton.click();
-    // }
-
     async verifyHardwareLogs(searchId: number) {
         // Verify the columns of the hardware logs table
         const columns = ['ID', 'Severity', 'Component', 'Error Code', 'Message', 'Timestamp', 'Actions'];
@@ -265,6 +230,7 @@ export class AssetsLiveData {
 
         // Verify the first row matches the selected filters
         const rowCount = await this.getDataRowCount();
+        await this.page.waitForTimeout(1000);
         expect(rowCount, 'Filtered results should contain at least one row').toBeGreaterThan(0);
 
         if (filters.severity) {
