@@ -59,6 +59,11 @@ export class OrganizationsPage {
     return this.page.locator('tr', { hasText: name });
   }
 
+  async sidePanel(name: string) {
+    this.page.waitForTimeout(1000); // Wait for the row to be visible
+    await this.page.getByRole('cell', { name: name }).click();
+  }
+
   async openRowMenu(name: string) {
     const row = this.rowByName(name);
     await expect(row).toBeVisible();
@@ -69,15 +74,8 @@ export class OrganizationsPage {
     return this.page.getByRole('menuitem', { name });
   }
 
-  async clickView() {
-    await this.menuItem('View').click();
-  }
-
-  async clickEdit() {
-    await this.menuItem('Edit').click();
-  }
-
   async updateName(newName: string) {
+    await this.page.getByRole('button', { name: 'Edit Organization' }).click();
     await this.companyNameInput.fill(newName);
     await this.dialog.getByRole('button', { name: 'Update Organization' }).click();
   }
@@ -88,6 +86,6 @@ export class OrganizationsPage {
   }
 
   async expectVisible(text: string) {
-    await expect(this.page.getByText(text).first()).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: text })).toBeVisible();
   }
 }

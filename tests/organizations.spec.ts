@@ -22,14 +22,12 @@ test.describe.serial('Organization CRUD flow', () => {
   });
 
   test('MSUP-ORG-TC004_View Organization', async ({ organizationsPage }) => {
-    await organizationsPage.openRowMenu(orgName);
-    await organizationsPage.clickView();
+    await organizationsPage.sidePanel(orgName);
     await organizationsPage.expectVisible(orgName);
   });
 
   test('MSUP-ORG-TC005_Edit Organization', async ({ organizationsPage }) => {
-    await organizationsPage.openRowMenu(orgName);
-    await organizationsPage.clickEdit();
+    await organizationsPage.sidePanel(orgName);
     await organizationsPage.updateName(updatedOrgName);
     await organizationsPage.expectVisible(updatedOrgName);
   });
