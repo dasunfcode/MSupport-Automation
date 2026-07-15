@@ -25,11 +25,17 @@ The app requires login and tests reuse a saved session in `auth.json` (JWTs that
 Run the setup project first so the MCP browser session is authenticated:
 
 ```
-npx playwright test --project=setup
+npm run auth   # == npx playwright test --project=setup
 ```
 
-The MCP server is already configured in `.vscode/mcp.json` to launch Chrome with
-`--storage-state auth.json`, so once auth is refreshed the browser opens logged in.
+The MCP server is configured in `.vscode/mcp.json` to launch Chrome with
+`--storage-state auth.json`. **Ordering matters:** the server reads `auth.json` only
+once, at launch. So the sequence must be:
+
+1. `npm run auth` to refresh `auth.json`.
+2. **Then** start or restart the `playwright` MCP server
+   (Command Palette → "MCP: List Servers" → Restart) so it picks up the fresh session.
+3. If a browser snapshot shows the `/login` page, the session is stale — repeat steps 1–2.
 
 ## Workflow
 

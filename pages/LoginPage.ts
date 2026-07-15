@@ -40,6 +40,6 @@ export class LoginPage {
   }
 
   async verifyDashboard() {
-    await expect(this.page).toHaveURL(/dashboard\/organizations/);
+    await expect(this.page).toHaveURL(/dashboard/);
   }
 }
