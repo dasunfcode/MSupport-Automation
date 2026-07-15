@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--browser", "chrome",
+        "--storage-state", "auth.json",
+        "--ignore-https-errors",
+        "--viewport-size", "1280,720",
+        "--output-dir", "test-results/mcp"
+      ]
+    }
+  }
+}
