@@ -276,12 +276,12 @@ export class AssetsLiveData {
     // component. We capture the row's message at runtime and assert the dialog
     // heading matches it.
     async verifyFullHardwareLog(_machineType: 'mpure' | 'mprint') {
-        const firstRow: Locator = this.page.getByLabel('View Details').nth(1);
+        const firstRow: Locator = this.page.getByLabel('View Details').nth(0);
         await firstRow.waitFor({ state: 'visible', timeout: 10000 });
 
         const expectedMessage = (await this.getColumnValues(4))[0];
         expect(expectedMessage, 'First row must expose a message to assert against').toBeTruthy();
-
+        
         await firstRow.click();
 
         await expect(this.page.getByRole('heading', { name: expectedMessage })).toBeVisible();

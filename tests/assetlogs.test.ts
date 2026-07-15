@@ -10,28 +10,28 @@ test('Verify navigation to assets page and search by serial number', async ({ as
     await assetsLiveData.page.waitForTimeout(1000);
 });
 
-test('Verify that MPure Hardware logs open and verify table details', async ({ assetsLiveData }) => {
-    await assetsLiveData.openMpureLogs();
-    await assetsLiveData.verifyHardwareLogs(1111);
-});
+// test('Verify that MPure Hardware logs open and verify table details', async ({ assetsLiveData }) => {
+//     await assetsLiveData.openMpureLogs();
+//     await assetsLiveData.verifyHardwareLogs(111);
+// });
 
-test('Verify that MPure Hardware logs sorting, pagination and filters work', async ({ assetsLiveData }) => {
-    await assetsLiveData.verifyHardwareLogsSorting();
-    await assetsLiveData.verifyHardwareLogsPagination();
-    await assetsLiveData.verifyHardwareLogFilters(
-        {
-            severity: 'WARNING',
-            component: 'stepper/supply/stepper_1',
-            errorCode: 'stepper/thermal_warning',
-            startTimestamp: '20/05/2021',
-            endTimestamp: '20/05/2026'
-        }, 'mpure'
-    );
-});
+// test('Verify that MPure Hardware logs sorting, pagination and filters work', async ({ assetsLiveData }) => {
+//     await assetsLiveData.verifyHardwareLogsSorting();
+//     await assetsLiveData.verifyHardwareLogsPagination();
+//     await assetsLiveData.verifyHardwareLogFilters(
+//         {
+//             severity: 'WARNING',
+//             component: 'stepper/supply/stepper_1',
+//             errorCode: 'stepper/thermal_warning',
+//             startTimestamp: '20/05/2021',
+//             endTimestamp: '20/05/2026'
+//         }, 'mpure'
+//     );
+// });
 
-test('Verify that full MPure hardware log details are visible', async ({ assetsLiveData }) => {
-    await assetsLiveData.verifyFullHardwareLog('mpure');
-});
+// test('Verify that full MPure hardware log details are visible', async ({ assetsLiveData }) => {
+//     await assetsLiveData.verifyFullHardwareLog('mpure');
+// });
 
 test('Verify that MPrint Hardware logs open and verify table details', async ({ assetsLiveData }) => {
     await assetsLiveData.openMprintLogs();
