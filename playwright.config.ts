@@ -67,12 +67,25 @@ export default defineConfig({
      */
     {
       name: 'chromium',
-      testIgnore: /assetlogs\.test\.ts/,
+      testIgnore: [/assetlogs\.test\.ts/, /servicecase\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         storageState: process.env.AUTH_JSON_PATH || 'auth.json',
       },
       dependencies: ['setup', 'assetlogs'],
+    },
+
+    /**
+     * Public Create Service Case form (qa.form.msupport.am/ticket-form).
+     * Requires no authentication, so it runs standalone with no dependencies
+     * and no stored auth state.
+     */
+    {
+      name: 'serviceform',
+      testMatch: /servicecase\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+      },
     },
   ],
 
