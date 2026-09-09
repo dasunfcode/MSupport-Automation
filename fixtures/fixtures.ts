@@ -9,6 +9,7 @@ import { AssetCreateDialog } from '../pages/AssetCreateDialog';
 import { AssetMCareDialog } from '../pages/AssetMCareDialog';
 import { DocumentsPage } from '../pages/DocumentsPage';
 import { ServiceCasePage } from '../pages/ServiceCasePage';
+import { SupportHubPage } from '../pages/SupportHubPage';
 
 type Credentials = { email: string; password: string };
 
@@ -26,6 +27,7 @@ type TestFixtures = {
     assetMCareDialog: AssetMCareDialog;
     documentsPage: DocumentsPage;
     serviceCasePage: ServiceCasePage;
+    supportHubPage: SupportHubPage;
 };
 
 async function loginAs(browser: Browser, email: string, password: string): Promise<Page> {
@@ -77,6 +79,12 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
         const serviceCasePage = new ServiceCasePage(page);
         await serviceCasePage.goto();
         await use(serviceCasePage);
+    },
+
+    supportHubPage: async ({ page }, use) => {
+        const supportHubPage = new SupportHubPage(page);
+        await supportHubPage.goto();
+        await use(supportHubPage);
     },
 
     assetsLiveData: [
