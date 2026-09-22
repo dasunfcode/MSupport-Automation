@@ -26,7 +26,7 @@ export class OrganizationsPage {
   }
 
   async goto() {
-    await this.page.goto('/dashboard/organizations');
+    await this.page.goto('/organizations');
   }
 
   async openAddOrganization() {

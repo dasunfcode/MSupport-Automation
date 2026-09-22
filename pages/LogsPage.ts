@@ -15,7 +15,7 @@ export class LogsPage {
   }
 
   async goto() {
-    await this.page.goto('/dashboard/logs', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/logs', { waitUntil: 'domcontentloaded' });
     await this.page.waitForSelector('table tbody tr');
   }
 

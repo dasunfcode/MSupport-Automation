@@ -35,6 +35,8 @@ test.describe.serial('Documents Page - View document information', () => {
     });
 
     test('MSUP-DOCUMENTS-TC016g_Side panel shows a document preview', async ({ documentsPage }) => {
+        // Only image documents render a visible preview, so filter to an image tag.
+        await documentsPage.selectTag('damage-photo');
         await documentsPage.openRowPanel(ROW);
         await documentsPage.expectPanelPreviewVisible();
     });

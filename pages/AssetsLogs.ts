@@ -1,5 +1,16 @@
 import { Page, Locator, expect } from '@playwright/test';
 
+export type MachineType = 'mpure' | 'mprint';
+
+/**
+ * Assets "live" area page object.
+ *
+ * The assets area was restructured: the side panel ("Asset Info") is now the
+ * single entry point for viewing an asset, its related tickets, its live
+ * machine data, its hardware logs and its software version. Hardware logs are
+ * no longer reachable from a dedicated column button - they live under
+ * Service View -> Hardware Logs inside the side panel.
+ */
 export class AssetsLiveData {
     readonly page: Page;
 
@@ -7,8 +18,14 @@ export class AssetsLiveData {
         this.page = page;
     }
 
+    /** The asset side panel (sheet) that hosts every asset detail view. */
+    private sidePanel(): Locator {
+        return this.page.getByRole('dialog', { name: 'Side panel' });
+    }
+
     async navigateToAssetsPage() {
-        await this.page.goto('/dashboard/assets');
+        await this.page.goto('/assets');
+        await this.page.waitForLoadState('networkidle', { timeout: 20_000 }).catch(() => { });
     }
 
     async searchAssetsBySerialNumber(searchTerm: string) {
@@ -29,53 +46,87 @@ export class AssetsLiveData {
             .waitFor({ state: 'visible', timeout: 15000 });
     }
 
-    // Method to open Mpure logs
+    /** Locate a table row by its asset serial number. */
+    private assetRow(serial: string): Locator {
+        return this.page.getByRole('row').filter({ hasText: serial }).first();
+    }
+
+    /** Open the Asset Info side panel for a specific asset serial number. */
+    async openAssetInfoPanel(serial: string) {
+        await this.closeSidePanel();
+        await this.searchAssetsBySerialNumber(serial);
+        await this.assetRow(serial).getByRole('button', { name: 'Asset Info' }).click();
+        await this.sidePanel().waitFor({ state: 'visible', timeout: 15000 });
+    }
+
+    /** Switch the side panel between its "Asset Info" and "Service View" modes. */
+    private async selectPanelMode(mode: 'assetInfo' | 'serviceView') {
+        await this.page.getByTestId('asset-panel-mode-select').click();
+        await this.page.getByTestId(`asset-panel-mode-option-${mode}`).click();
+    }
+
+    /** Open Service View -> Hardware Logs for a specific asset. */
+    async openHardwareLogs(serial: string) {
+        await this.openAssetInfoPanel(serial);
+        await this.selectPanelMode('serviceView');
+        await this.page.getByTestId('asset-tab-hardwareLogs').click();
+
+        // Wait for the hardware logs table to render inside the panel.
+        await this.sidePanel()
+            .getByRole('columnheader', { name: 'ID', exact: true })
+            .waitFor({ state: 'visible', timeout: 15000 });
+
+        // Wait for real data rows to replace the loading skeleton (skeleton rows
+        // have no "View Details" button).
+        await this.sidePanel()
+            .getByRole('button', { name: 'View Details' })
+            .first()
+            .waitFor({ state: 'visible', timeout: 15000 });
+    }
+
+    // Method to open Mpure (MPURE / MPU00001) logs
     async openMpureLogs() {
-        const mpureMachineLabel: Locator = this.page.getByRole('cell', { name: 'MPU00001' }).first();
-
-        await mpureMachineLabel.waitFor({ state: 'visible', timeout: 10000 });
-        await mpureMachineLabel.click();
-
-        const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
-
-        await hardwareLogsButton.waitFor({ state: 'visible', timeout: 10000 });
-        await hardwareLogsButton.click();
-
-        //await this.openHardwareLogsForMachine('mpure');
+        await this.openHardwareLogs('MPU00001');
     }
 
-    // Method to open Mprint logs
+    // Method to open Mprint (MPRINT / MPR00001) logs
     async openMprintLogs() {
-        const mprintMachineLabel: Locator = this.page.getByRole('cell', { name: 'MPR00001' }).first();
-
-        await mprintMachineLabel.waitFor({ state: 'visible', timeout: 10000 });
-        await mprintMachineLabel.click();
-
-        const hardwareLogsButton: Locator = this.page.getByRole('button', { name: 'Hardware Logs' });
-        
-        await hardwareLogsButton.waitFor({ state: 'visible', timeout: 10000 });
-        await hardwareLogsButton.click();
+        await this.openHardwareLogs('MPR00001');
     }
 
-    async verifyHardwareLogs(searchId: number) {
+    /** Close the side panel if it is currently open. */
+    async closeSidePanel() {
+        const panel = this.sidePanel();
+        if (await panel.isVisible().catch(() => false)) {
+            await panel.getByRole('button', { name: 'Close' }).first().click().catch(() => { });
+            await panel.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => { });
+        }
+    }
+
+    async verifyHardwareLogs() {
         // Verify the columns of the hardware logs table
         const columns = ['ID', 'Severity', 'Component', 'Error Code', 'Message', 'Timestamp', 'Actions'];
         for (const column of columns) {
             const header: Locator = column === 'Actions'
-                ? this.page.getByLabel('Side panel').getByRole('columnheader', { name: 'Actions' })
-                : this.page.getByRole('columnheader', { name: column, exact: true });
-            await header.waitFor({ state: 'visible', timeout: 10000 });
+                ? this.sidePanel().getByRole('columnheader', { name: 'Actions' })
+                : this.sidePanel().getByRole('columnheader', { name: column, exact: true });
+            await header.first().waitFor({ state: 'visible', timeout: 10000 });
         }
 
-        //verify that the search bar is working in hardware logs table
+        // Verify the search bar works by searching for the first row's actual ID.
+        const firstId = (await this.getColumnValues(0))[0];
+        expect(firstId, 'Hardware logs table should contain at least one row').toBeTruthy();
+
         const searchBar: Locator = this.page.getByRole('textbox', { name: 'Search hardware logs...' });
-        const searchTerm = searchId.toString();
         await searchBar.waitFor({ state: 'visible', timeout: 10000 });
         await searchBar.fill('');
         await searchBar.focus();
-        await searchBar.fill(searchTerm, { timeout: 10000 });
-        const row: Locator = this.page.getByRole('cell', {name: searchTerm});
-        await row.first().waitFor({ state: 'visible', timeout: 10000 });
+        await searchBar.fill(firstId, { timeout: 10000 });
+
+        await this.sidePanel()
+            .getByRole('cell', { name: firstId, exact: true })
+            .first()
+            .waitFor({ state: 'visible', timeout: 10000 });
         await searchBar.fill('');
     }
 
@@ -100,7 +151,7 @@ export class AssetsLiveData {
         columnIndex: number,
         type: 'number' | 'date' | 'string'
     ) {
-        const header: Locator = this.page.getByRole('columnheader', { name: columnName, exact: true });
+        const header: Locator = this.sidePanel().getByRole('columnheader', { name: columnName, exact: true });
         const sortButton: Locator = header.getByRole('button').first();
         const clickTarget: Locator = (await sortButton.count()) > 0 ? sortButton : header;
 
@@ -118,7 +169,7 @@ export class AssetsLiveData {
     }
 
     private async getColumnValues(columnIndex: number): Promise<string[]> {
-        const rows: Locator = this.page.getByRole('dialog', { name: 'Side panel' }).getByRole('row');
+        const rows: Locator = this.sidePanel().getByRole('row');
         const count = await rows.count();
         const values: string[] = [];
         // Skip header row at index 0
@@ -157,7 +208,7 @@ export class AssetsLiveData {
 
         for (const pageSize of pageSizes) {
             // Open the rows-per-page dropdown and pick the page size
-            const pageSizeDropdown: Locator = this.page.getByRole('dialog', { name: 'Side panel' }).getByRole('combobox');
+            const pageSizeDropdown: Locator = this.sidePanel().getByRole('combobox');
             await pageSizeDropdown.waitFor({ state: 'visible', timeout: 10000 });
             await pageSizeDropdown.click();
             await this.page.getByRole('option', { name: String(pageSize), exact: true }).click();
@@ -169,7 +220,7 @@ export class AssetsLiveData {
             const firstPageFirstId = (await this.getColumnValues(0))[0];
 
             // Go to the next page and verify rows again
-            const nextButton: Locator = this.page.getByRole('button', { name: '2', exact: true });
+            const nextButton: Locator = this.sidePanel().getByRole('button', { name: '2', exact: true });
             await nextButton.waitFor({ state: 'visible', timeout: 10000 });
             await nextButton.click();
             await this.page.waitForTimeout(500);
@@ -182,14 +233,14 @@ export class AssetsLiveData {
             expect(secondPageFirstId, 'Page 2 content should differ from page 1').not.toBe(firstPageFirstId);
 
             // Return to the first page for the next iteration
-            const prevButton: Locator = this.page.getByLabel('Side panel').getByRole('button', { name: '1', exact: true });
+            const prevButton: Locator = this.sidePanel().getByRole('button', { name: '1', exact: true });
             await prevButton.click();
             await this.page.waitForTimeout(500);
         }
     }
 
     private async getDataRowCount(): Promise<number> {
-        const rows: Locator = this.page.getByRole('dialog', { name: 'Side panel' }).getByRole('row');
+        const rows: Locator = this.sidePanel().getByRole('row');
         // Subtract the header row
         return (await rows.count()) - 1;
     }
@@ -202,35 +253,33 @@ export class AssetsLiveData {
         errorCode?: string;
         startTimestamp?: string;
         endTimestamp?: string;
-    }, machineType: string) {
-        const filterButton: Locator = this.page.getByLabel('Side panel').getByRole('button', { name: 'Filters' });
-        await filterButton.waitFor({ state: 'visible', timeout: 10000 });
-        await filterButton.click();
+    }, _machineType: MachineType) {
+        await this.sidePanel().getByRole('button', { name: 'Filters' }).click();
+
+        const filterDialog: Locator = this.page.getByRole('dialog', { name: 'Filter Hardware Logs' });
+        await filterDialog.waitFor({ state: 'visible', timeout: 10000 });
 
         if (filters.severity) {
-            await this.selectFilterDropdown('Severity', filters.severity);
+            await this.selectFilterDropdown('Select severity', filters.severity);
         }
         if (filters.component) {
-            await this.selectFilterDropdown('Component', filters.component);
+            await this.selectFilterDropdown('Select component', filters.component);
         }
         if (filters.errorCode) {
-            await this.selectFilterDropdown('Error Code', filters.errorCode);
+            await this.selectFilterDropdown('Select error code', filters.errorCode);
         }
         if (filters.startTimestamp) {
-            await this.selectFilterDate('Start Date', filters.startTimestamp);
+            await this.selectFilterDate('Start date', filters.startTimestamp);
         }
         if (filters.endTimestamp) {
-            await this.selectFilterDate('End Date', filters.endTimestamp);
+            await this.selectFilterDate('End date', filters.endTimestamp);
         }
 
-        const applyButton: Locator = this.page.getByRole('button', { name: 'Apply Filters' });
-        await applyButton.waitFor({ state: 'visible', timeout: 10000 });
-        await applyButton.click();
-        await this.page.waitForTimeout(500);
+        await filterDialog.getByRole('button', { name: 'Apply Filters' }).click();
+        await this.page.waitForTimeout(800);
 
         // Verify the first row matches the selected filters
         const rowCount = await this.getDataRowCount();
-        await this.page.waitForTimeout(1000);
         expect(rowCount, 'Filtered results should contain at least one row').toBeGreaterThan(0);
 
         if (filters.severity) {
@@ -246,26 +295,34 @@ export class AssetsLiveData {
             expect(value.toLowerCase()).toContain(filters.errorCode.toLowerCase());
         }
 
-        // Reset filters after verification
-        
-            const resetFiltersButton: Locator = this.page.locator('.flex.flex-shrink-0 > .flex.cursor-pointer.items-center.gap-2.rounded-lg.border.border-primary.px-3\\.5');
-            await resetFiltersButton.click();
-        
-     }
-
-    private async selectFilterDropdown(label: string, value: string) {
-        const dropdown: Locator = this.page.getByRole('button', { name: label });
-        await dropdown.waitFor({ state: 'visible', timeout: 10000 });
-        await dropdown.click();
-        await this.page.getByRole('option', { name: value, exact: true }).click();
-        await this.page.keyboard.press('Escape');
+        // Reset filters after verification. "Clear Filters" resets and closes the dialog.
+        await this.sidePanel().getByRole('button', { name: 'Filters' }).click();
+        await filterDialog.waitFor({ state: 'visible', timeout: 10000 });
+        await filterDialog.getByRole('button', { name: 'Clear Filters' }).click();
+        await filterDialog.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => { });
     }
 
-    private async selectFilterDate(label: string, value: string) {
-        const dateInput: Locator = this.page.getByRole('textbox', { name: label });
+    private async selectFilterDropdown(buttonName: string, value: string) {
+        const filterDialog: Locator = this.page.getByRole('dialog', { name: 'Filter Hardware Logs' });
+        await filterDialog.getByRole('button', { name: buttonName }).click();
+
+        // Each filter opens a searchable command popover. Type to narrow the list,
+        // pick the exact option, then close the popover (it stays open on select).
+        const combo: Locator = this.page.getByRole('combobox', { expanded: true }).last();
+        await combo.waitFor({ state: 'visible', timeout: 10000 });
+        await combo.fill(value);
+        await this.page.waitForTimeout(300);
+        await this.page.getByRole('option', { name: value, exact: true }).first().click();
+        await this.page.waitForTimeout(200);
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(200);
+    }
+
+    private async selectFilterDate(textboxName: string, value: string) {
+        const filterDialog: Locator = this.page.getByRole('dialog', { name: 'Filter Hardware Logs' });
+        const dateInput: Locator = filterDialog.getByRole('textbox', { name: textboxName });
         await dateInput.waitFor({ state: 'visible', timeout: 10000 });
         await dateInput.fill(value);
-        await dateInput.press('Enter');
     }
     // End of filter verification methods
 
@@ -275,18 +332,98 @@ export class AssetsLiveData {
     // continuously, so the test must not depend on a specific ID, severity, or
     // component. We capture the row's message at runtime and assert the dialog
     // heading matches it.
-    async verifyFullHardwareLog(_machineType: 'mpure' | 'mprint') {
-        const firstRow: Locator = this.page.getByLabel('View Details').nth(0);
+    async verifyFullHardwareLog(_machineType: MachineType) {
+        const firstRow: Locator = this.sidePanel().getByRole('button', { name: 'View Details' }).first();
         await firstRow.waitFor({ state: 'visible', timeout: 10000 });
 
         const expectedMessage = (await this.getColumnValues(4))[0];
         expect(expectedMessage, 'First row must expose a message to assert against').toBeTruthy();
-        
+
         await firstRow.click();
 
         await expect(this.page.getByRole('heading', { name: expectedMessage })).toBeVisible();
 
         await this.page.getByRole('button', { name: 'Dismiss' }).click();
-        await this.page.getByRole('button', { name: 'Close' }).click();
+        await this.page.getByRole('button', { name: 'Close' }).last().click();
+    }
+
+    // ==================== NEW ASSET DETAIL VIEWS ====================
+
+    /**
+     * Open the Asset Info view for an asset and verify the general information.
+     * When the asset has related tickets, they are shown as cards under a
+     * "Related Tickets" heading.
+     */
+    async verifyAssetInfoView(serial: string) {
+        await this.openAssetInfoPanel(serial);
+        await this.selectPanelMode('assetInfo');
+        const panel = this.sidePanel();
+
+        await expect(panel.getByRole('heading', { name: serial, exact: true })).toBeVisible();
+
+        // General Info tab (default)
+        await panel.getByTestId('asset-tab-general').click();
+        await expect(panel.getByText('Asset Type', { exact: true })).toBeVisible();
+        await expect(panel.getByText('(Assigned) Organization', { exact: true })).toBeVisible();
+
+        // Related tickets render as cards only when the asset has any.
+        const relatedHeading = panel.getByRole('heading', { name: 'Related Tickets' });
+        if (await relatedHeading.isVisible().catch(() => false)) {
+            const ticketCards = panel.getByRole('button', { name: /TM-\d+/ });
+            expect(await ticketCards.count(), 'Related Tickets section should list ticket cards').toBeGreaterThan(0);
+        }
+
+        await this.closeSidePanel();
+    }
+
+    /**
+     * Open Service View -> Live Data for an asset and verify live machine data
+     * is rendered.
+     */
+    async verifyServiceLiveData(serial: string) {
+        await this.openAssetInfoPanel(serial);
+        await this.selectPanelMode('serviceView');
+        const panel = this.sidePanel();
+
+        await panel.getByRole('button', { name: 'Live Data' }).click();
+
+        await expect(panel.getByText('Last update')).toBeVisible();
+
+        // Live data renders a number of labelled sections/values.
+        const sectionCount = await panel.locator('p').count();
+        expect(sectionCount, 'Live Data should render machine data sections').toBeGreaterThan(2);
+
+        await this.closeSidePanel();
+    }
+
+    /**
+     * Trigger the Connect ("Device Link") wizard for an asset, step through it
+     * and verify it ends on the "Open Service Tool" step that references the
+     * asset serial as the Wi-Fi name.
+     */
+    async verifyConnectDeviceLink(serial: string) {
+        await this.closeSidePanel();
+        await this.searchAssetsBySerialNumber(serial);
+        await this.assetRow(serial).getByRole('button', { name: 'Connect' }).click();
+
+        const dialog: Locator = this.page.getByRole('dialog').filter({ hasText: 'Device Link' }).first();
+        await dialog.waitFor({ state: 'visible', timeout: 10000 });
+        await expect(dialog.getByRole('heading', { name: 'Device Link' })).toBeVisible();
+
+        // Advance through the instruction steps until the final step is reached.
+        for (let i = 0; i < 5; i++) {
+            const continueBtn = dialog.getByRole('button', { name: 'Continue' });
+            const canContinue = await continueBtn.isVisible().catch(() => false)
+                && await continueBtn.isEnabled().catch(() => false);
+            if (!canContinue) break;
+            await continueBtn.click();
+            await this.page.waitForTimeout(600);
+        }
+
+        await expect(dialog.getByRole('button', { name: 'Open Service Tool' })).toBeVisible();
+        await expect(dialog.getByText(serial)).toBeVisible();
+
+        await this.page.getByRole('button', { name: 'Close' }).last().click();
+        await dialog.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => { });
     }
 }
