@@ -18,12 +18,12 @@ const SIZE_CELL_INDEX = 4;
 // Labels shown for each metadata field inside the document detail side panel.
 const PANEL_DETAIL_LABELS = ['Tag', 'Source', 'Organization', 'Size', 'Created', 'Updated'] as const;
 
-// Source cells / values read as "Ticket #10999" or "Asset #MPR43242".
-const SOURCE_VALUE_PATTERN = /^(Ticket|Asset) #\S+/;
+// Source cells / values read as "Ticket TM-11221" or "Asset MPR43242".
+const SOURCE_VALUE_PATTERN = /^(Ticket|Asset) \S+/;
 // Size cells read as e.g. "6KB", "1.2MB".
 const SIZE_VALUE_PATTERN = /^\d+(\.\d+)?\s?(B|KB|MB|GB)$/i;
-// Updated cells read as "2026-07-14 11:35".
-const DATETIME_VALUE_PATTERN = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+// Updated cells read as "09/22/2026" (MM/DD/YYYY).
+const DATETIME_VALUE_PATTERN = /^\d{2}\/\d{2}\/\d{4}$/;
 
 export interface DocumentRowData {
     name: string;
@@ -42,8 +42,8 @@ export type SourceFilterKey = 'all' | 'asset' | 'ticket';
 
 // The label shown in a row's Source cell for each non-"all" source filter.
 const SOURCE_CELL_PREFIX: Record<Exclude<SourceFilterKey, 'all'>, string> = {
-    asset: 'Asset #',
-    ticket: 'Ticket #',
+    asset: 'Asset ',
+    ticket: 'Ticket ',
 };
 
 export class DocumentsPage {
@@ -71,8 +71,11 @@ export class DocumentsPage {
         this.searchInput = page.getByRole('textbox', {
             name: 'Search by file name, asset, ticket, organization',
         });
-        this.tagFilterLabel = page.getByRole('paragraph').filter({ hasText: /^Tag$/ });
-        this.sourceFilterLabel = page.getByRole('paragraph').filter({ hasText: /^Source$/ });
+        // The "Tag"/"Source" filter captions are plain text nodes (not <p>), and the
+        // same words also appear as column headers, so scope to the first match
+        // which is the filter caption rendered above the table.
+        this.tagFilterLabel = page.getByText('Tag', { exact: true }).first();
+        this.sourceFilterLabel = page.getByText('Source', { exact: true }).first();
         this.allTagChip = page.getByRole('button', { name: /^All \(\d+\)$/ });
         this.anySourceChip = page.getByRole('button', { name: /^Any Source \(\d+\)$/ });
         this.assetsSourceChip = page.getByRole('button', { name: /^Assets \(\d+\)$/ });
@@ -91,7 +94,7 @@ export class DocumentsPage {
     }
 
     async goto() {
-        await this.page.goto('/dashboard/documents', { waitUntil: 'domcontentloaded' });
+        await this.page.goto('/documents', { waitUntil: 'domcontentloaded' });
         await this.table.waitFor({ state: 'visible', timeout: 20_000 });
     }
 
@@ -101,7 +104,7 @@ export class DocumentsPage {
 
     async openFromLeftNav() {
         await this.navLink.click();
-        await expect(this.page).toHaveURL(/dashboard\/documents/);
+        await expect(this.page).toHaveURL(/\/documents(?:[/?#]|$)/);
         await this.table.waitFor({ state: 'visible', timeout: 20_000 });
     }
 
@@ -211,7 +214,7 @@ export class DocumentsPage {
     }
 
     async expectDocumentVisible(name: string) {
-        await expect(this.table.getByText(name, { exact: false })).toBeVisible();
+        await expect(this.table.getByText(name, { exact: false }).first()).toBeVisible();
     }
 
     // Polls until at least one result row is present and every result row's value
@@ -250,14 +253,34 @@ export class DocumentsPage {
         await this.expectColumnValuesAllContain(3, term);
     }
 
+    // Applies a source filter, then reads the first result row's Source identifier
+    // (e.g. "MPR43242" from "Asset MPR43242") and document name, resetting the
+    // filter afterwards. Search tests use this live data instead of hard-coded IDs
+    // that drift as the QA environment changes.
+    async deriveSourceRow(key: Exclude<SourceFilterKey, 'all'>): Promise<{ id: string; name: string }> {
+        await this.selectSource(key);
+        await this.waitForRowsLoaded();
+        const source = (await this.rowCell(0, SOURCE_CELL_INDEX).innerText()).trim();
+        const name = (await this.rowCell(0, DOCUMENT_CELL_INDEX).innerText()).trim();
+        await this.selectSource('all');
+        return { id: source.replace(/^(Asset|Ticket)\s+/i, '').trim(), name };
+    }
+
+    // Reads the organization shown in the first (default) result row so search
+    // tests can query a live organization value.
+    async deriveOrganization(): Promise<string> {
+        await this.waitForRowsLoaded();
+        return (await this.rowCell(0, ORGANIZATION_CELL_INDEX).innerText()).trim();
+    }
+
     // ----- Tag / Source filters -----
 
     tagChip(key: TagFilterKey): Locator {
-        return this.page.getByTestId(`document-filter-tag-${key}`);
+        return this.page.getByTestId(`filter-tag-${key}`);
     }
 
     sourceChip(key: SourceFilterKey): Locator {
-        return this.page.getByTestId(`document-filter-source-${key}`);
+        return this.page.getByTestId(`filter-source-${key}`);
     }
 
     // Clicks a filter chip and waits for the documents search API so assertions
@@ -281,12 +304,14 @@ export class DocumentsPage {
         await this.clickFilter(this.sourceChip(key));
     }
 
+    // The active filter chip is styled with the "bg-black text-white" classes;
+    // inactive chips use "text-foreground". The app exposes no aria-pressed state.
     async expectTagChipActive(key: TagFilterKey) {
-        await expect(this.tagChip(key)).toHaveAttribute('aria-pressed', 'true');
+        await expect(this.tagChip(key)).toHaveClass(/bg-black/);
     }
 
     async expectSourceChipActive(key: SourceFilterKey) {
-        await expect(this.sourceChip(key)).toHaveAttribute('aria-pressed', 'true');
+        await expect(this.sourceChip(key)).toHaveClass(/bg-black/);
     }
 
     // Parses the trailing "(N)" count from a chip's label, e.g. "Dump File (2)".
@@ -313,9 +338,18 @@ export class DocumentsPage {
         await this.expectColumnValuesAllContain(SOURCE_CELL_INDEX, SOURCE_CELL_PREFIX[key]);
     }
 
+    // The chips first render "(0)" and update to real counts once the counts API
+    // resolves; wait for the "All" chip to hydrate so reads don't catch the 0 state.
+    private async waitForFilterCountsLoaded() {
+        await expect
+            .poll(async () => this.getTagCount('all'), { timeout: 15_000 })
+            .toBeGreaterThan(0);
+    }
+
     // Verifies that the individual tag counts sum to the "All" tag count, and the
     // individual source counts sum to the "Any Source" count.
     async expectFilterCountsConsistent() {
+        await this.waitForFilterCountsLoaded();
         const allTagCount = await this.getTagCount('all');
         const tagParts = await Promise.all(
             (['damage-photo', 'dump-file', 'faulty-part', 'untagged'] as TagFilterKey[]).map((k) =>
@@ -505,7 +539,9 @@ export class DocumentsPage {
         await this.expectPanelDetail('Source', row.source);
         await this.expectPanelDetail('Organization', row.organization);
         await this.expectPanelDetail('Size', row.size);
-        await this.expectPanelDetail('Updated', row.updated);
+        // The table shows the date only ("09/22/2026") while the panel shows the
+        // full timestamp ("09/22/2026 01:24 PM"), so assert the panel contains it.
+        await expect(this.panelDetailValue('Updated')).toContainText(row.updated);
     }
 
     // ----- Document download -----
@@ -564,8 +600,10 @@ export class DocumentsPage {
         await this.expectDownloadPreservesFile(download, row.name);
     }
 
-    // Downloading one document must not affect another: two different rows each
-    // yield their own distinct, correctly named file.
+    // Downloading one document must not affect another: each row yields its own
+    // file, persisted to a distinct path with its own row's filename and non-empty
+    // content. Two documents may legitimately share a filename, so independence is
+    // asserted via distinct persisted files rather than distinct suggested names.
     async expectDownloadsAreIndependent(rowA: number, rowB: number) {
         const nameA = (await this.getRowData(rowA)).name;
         const nameB = (await this.getRowData(rowB)).name;
@@ -573,7 +611,13 @@ export class DocumentsPage {
         const downloadB = await this.downloadRow(rowB);
         expect(downloadA.suggestedFilename()).toBe(nameA);
         expect(downloadB.suggestedFilename()).toBe(nameB);
-        expect(downloadA.suggestedFilename()).not.toBe(downloadB.suggestedFilename());
+        const pathA = await downloadA.path();
+        const pathB = await downloadB.path();
+        expect(pathA, 'First download should be persisted to disk').toBeTruthy();
+        expect(pathB, 'Second download should be persisted to disk').toBeTruthy();
+        expect(pathA).not.toBe(pathB);
+        expect(statSync(pathA!).size, 'First download should not be empty').toBeGreaterThan(0);
+        expect(statSync(pathB!).size, 'Second download should not be empty').toBeGreaterThan(0);
     }
 
     // Simulates the physical file being unavailable by failing the storage

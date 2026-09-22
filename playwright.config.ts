@@ -67,7 +67,7 @@ export default defineConfig({
      */
     {
       name: 'chromium',
-      testIgnore: [/assetlogs\.test\.ts/, /servicecase\.spec\.ts/],
+      testIgnore: [/assetlogs\.test\.ts/, /servicecase\.spec\.ts/, /servicecasetracking\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         storageState: process.env.AUTH_JSON_PATH || 'auth.json',
@@ -76,13 +76,26 @@ export default defineConfig({
     },
 
     /**
-     * Public Create Service Case form (qa.form.msupport.am/ticket-form).
+     * Public Create Service Case form (qa.form.msupport.am/service-case).
      * Requires no authentication, so it runs standalone with no dependencies
      * and no stored auth state.
      */
     {
       name: 'serviceform',
       testMatch: /servicecase\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+
+    /**
+     * Public Service Case Tracking page (qa.form.msupport.am/service-case/<id>?token=).
+     * Reached anonymously via a personal tracking link, so it runs standalone with
+     * no dependencies and no stored auth state.
+     */
+    {
+      name: 'servicetracking',
+      testMatch: /servicecasetracking\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
       },

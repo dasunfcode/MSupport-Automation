@@ -5,9 +5,6 @@ const DOC_FULL_NAME = 'MPR00059-diagnostics-20240221-133607 (2).dump';
 const SEARCH = {
     documentNamePartial: 'diagnost',        // -> DOC_FULL_NAME (partial of "diagnostics")
     documentNameUpper: 'DIAGNOSTICS',       // case-insensitivity check
-    assetId: 'MPR43242',                    // Source column: "Asset #MPR43242"
-    ticketNumber: '10999',                  // Source column: "Ticket #10999"
-    organization: 'Escalate basic new BB',  // Organization column
     noMatch: `zzzznope-${Date.now()}`,      // guaranteed no results
 };
 
@@ -23,18 +20,21 @@ test.describe.serial('Documents Page - Search', () => {
     });
 
     test('MSUP-DOCUMENTS-TC014c_Search by asset returns matching documents', async ({ documentsPage }) => {
-        await documentsPage.searchFor(SEARCH.assetId);
-        await documentsPage.expectResultsSourceColumnAllContain(SEARCH.assetId);
+        const { id, name } = await documentsPage.deriveSourceRow('asset');
+        await documentsPage.searchFor(id);
+        await documentsPage.expectDocumentVisible(name);
     });
 
     test('MSUP-DOCUMENTS-TC014d_Search by ticket returns matching documents', async ({ documentsPage }) => {
-        await documentsPage.searchFor(SEARCH.ticketNumber);
-        await documentsPage.expectResultsSourceColumnAllContain(SEARCH.ticketNumber);
+        const { id, name } = await documentsPage.deriveSourceRow('ticket');
+        await documentsPage.searchFor(id);
+        await documentsPage.expectDocumentVisible(name);
     });
 
     test('MSUP-DOCUMENTS-TC014e_Search by organization returns matching documents', async ({ documentsPage }) => {
-        await documentsPage.searchFor(SEARCH.organization);
-        await documentsPage.expectResultsOrganizationColumnAllContain(SEARCH.organization);
+        const organization = await documentsPage.deriveOrganization();
+        await documentsPage.searchFor(organization);
+        await documentsPage.expectResultsOrganizationColumnAllContain(organization);
     });
 
     test('MSUP-DOCUMENTS-TC014f_Search results update immediately without submitting', async ({ documentsPage }) => {

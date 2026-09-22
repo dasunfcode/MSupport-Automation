@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { AssetsPage } from './AssetsPage';
 
 export class AssetMCareDialog {
@@ -6,6 +6,11 @@ export class AssetMCareDialog {
 
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /** MCare is now managed inside the asset "Side panel" (MCare and Maintenance tab). */
+    private panel(): Locator {
+        return this.page.getByRole('dialog', { name: 'Side panel' });
     }
 
     /** Add a Booked MCare package */
@@ -23,21 +28,21 @@ export class AssetMCareDialog {
     }
 
     private async selectPackage(packageName: string) {
-        await this.page.getByRole('combobox').first().click();
+        await this.panel().getByRole('combobox').first().click();
         await this.page.getByRole('option', { name: packageName }).click().catch(() =>
             this.page.locator('[role="option"]').first().click()
         );
     }
 
     private async clickAddOrRecover(packageName: string) {
-        const addBtn = this.page.getByRole('button', { name: 'Add' }).first();
+        const addBtn = this.panel().getByRole('button', { name: 'Add' }).first();
         if (await addBtn.isEnabled().catch(() => false)) {
             await addBtn.click();
             return;
         }
 
         console.log('Add button disabled — closing MCare dialog and updating Reference Date');
-        await this.page.getByRole('button', { name: 'Close' }).click();
+        await this.panel().getByRole('button', { name: 'Close' }).first().click();
         await new AssetsPage(this.page).updateFirstAssetReferenceDate();
         await this.page.waitForTimeout(1000);
 
@@ -45,7 +50,7 @@ export class AssetMCareDialog {
         await new AssetsPage(this.page).openManageMCareForFirstAsset();
 
         await this.selectPackage(packageName);
-        const reopenedAddBtn = this.page.getByRole('button', { name: 'Add' }).first();
+        const reopenedAddBtn = this.panel().getByRole('button', { name: 'Add' }).first();
         if (!(await reopenedAddBtn.isEnabled().catch(() => false))) {
             throw new Error('Add button remained disabled after updating Reference Date');
         }
@@ -63,22 +68,22 @@ export class AssetMCareDialog {
 
         const formattedDate = randomDate.toLocaleDateString('en-GB');
 
-        await this.page
+        await this.panel()
             .locator('input[placeholder="DD/MM/YYYY"]')
             .first()
             .fill(formattedDate);
 
-        await this.page.getByRole('button', { name: 'Add' }).nth(1).click().catch(() => { });
+        await this.panel().getByRole('button', { name: 'Add' }).nth(1).click().catch(() => { });
     }
 
     /** Click Update MCare Packages */
     async update() {
-        const updateBtn = this.page.getByRole('button', { name: 'Update MCare Packages' });
+        const updateBtn = this.panel().getByRole('button', { name: 'Update MCare Packages' });
         if (await updateBtn.isEnabled()) {
             await updateBtn.click();
             console.log('MCare packages updated');
         } else {
-            await this.page.getByRole('button', { name: 'Close' }).click();
+            await this.panel().getByRole('button', { name: 'Close' }).first().click();
         }
     }
 }

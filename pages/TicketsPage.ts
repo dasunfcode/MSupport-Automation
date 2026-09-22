@@ -9,6 +9,7 @@ export class TicketPage {
   readonly nameInput: Locator;
   readonly ticketTypeSection: Locator;
   readonly classifySection: Locator;
+  readonly deviceTypeButton: Locator;
   readonly selectAssetButton: Locator;
   readonly escalateButton: Locator;
   readonly descriptionTextarea: Locator;
@@ -25,6 +26,7 @@ export class TicketPage {
     this.nameInput = page.getByLabel('Name');
     this.ticketTypeSection = page.locator('text=Select Ticket Type').locator('..');
     this.classifySection = page.locator('text=Classify Issue').locator('..');
+    this.deviceTypeButton = page.getByRole('combobox').filter({ hasText: 'Select device type' });
     this.selectAssetButton = page.getByText('Select asset', { exact: true });
     this.escalateButton = page.locator('.peer.h-4');
     this.descriptionTextarea = page.locator('textarea[name="description"]');
@@ -33,12 +35,12 @@ export class TicketPage {
     this.confirmDeleteButton = page.getByRole('button', { name: 'Confirm & Delete' });
     this.searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
     this.updateRow = page.getByRole('cell', { name: 'Test Ticket' });
-    this.editButton = page.getByRole('button', { name: 'tickets.edit' });
+    this.editButton = page.getByRole('button', { name: 'edit', exact: true });
     this.closeButton = page.getByRole('button', { name: 'Close', exact: true });
   }
 
   async goto() {
-    await this.page.goto('/dashboard/tickets');
+    await this.page.goto('/tickets');
   }
 
   ticketRow(ticketName: string): Locator {
@@ -77,6 +79,12 @@ export class TicketPage {
     await this.ticketTypeSection.getByText('Problem', { exact: true }).click();
     await this.classifySection.getByText('Failure Without Downtime', { exact: true }).click();
 
+    // The asset selector is disabled until a device type is chosen.
+    await this.deviceTypeButton.click();
+    const firstDeviceOption = this.page.getByRole('option').first();
+    await firstDeviceOption.waitFor({ state: 'visible', timeout: DEFAULT_TIMEOUT });
+    await firstDeviceOption.click();
+
     await this.selectAssetButton.click();
     const firstAssetOption = this.page.getByRole('option').first();
     await firstAssetOption.waitFor({ state: 'visible', timeout: DEFAULT_TIMEOUT });
@@ -85,9 +93,9 @@ export class TicketPage {
     await this.descriptionTextarea.fill(DESCRIPTION);
 
     if (adminType === 'Global Admin') {
-      await expect(this.escalateButton).not.toBeVisible();
-    } else {
-      await this.escalateButton.click();
+      await expect(this.escalateButton).toHaveCount(0);
+    } else if (await this.escalateButton.count() > 0) {
+      await this.escalateButton.first().click();
     }
 
     await this.createButton.click();
@@ -100,13 +108,13 @@ export class TicketPage {
 
   async editTicket(oldName: string, newName: string) {
     const row = await this.searchTicket(oldName);
-    await this.page.waitForTimeout(1000);
-    await this.updateRow.click();
+    await expect(row.first()).toBeVisible({ timeout: DEFAULT_TIMEOUT });
+    await row.first().getByRole('cell').first().click();
     await this.editButton.click();
     await this.nameInput.fill(newName);
     await this.updateButton.click();
     await this.searchInput.fill(newName);
-    await expect(this.ticketRow(newName)).toBeVisible();
+    await expect(this.ticketRow(newName).first()).toBeVisible();
     await this.closeButton.click();
   }
 

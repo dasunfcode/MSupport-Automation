@@ -12,10 +12,12 @@ export type DocumentTag = 'Untagged' | 'Faulty Part' | 'Damage Photo' | 'Dump Fi
 /**
  * Page Object for the public Create Service Case form.
  *
- * Lives on a dedicated host (https://qa.form.msupport.am/ticket-form) and does
- * NOT require authentication. The form is a reusable embed: ticket type radios,
- * device/asset/company custom (Radix) comboboxes, contact fields and a file
- * upload area, ending on a /ticket-created confirmation page.
+ * Lives on a dedicated host (https://qa.form.msupport.am/service-case) and does
+ * NOT require authentication. The form is a reusable embed configured via query
+ * params: the company name is prefilled and locked (isCompanyNameEditable=false).
+ * It has ticket type radios, a device type combobox, an affected-asset serial
+ * textbox, contact fields and a file upload area, ending on a
+ * /service-case-created confirmation page.
  */
 export class ServiceCasePage {
     readonly page: Page;
@@ -26,12 +28,12 @@ export class ServiceCasePage {
     // Ticket information
     readonly ticketNameInput: Locator;
     readonly deviceTypeTrigger: Locator;
-    readonly affectedAssetTrigger: Locator;
+    readonly affectedAssetInput: Locator;
     readonly descriptionInput: Locator;
 
     // Contact information
     readonly nameInput: Locator;
-    readonly companyTrigger: Locator;
+    readonly companyNameInput: Locator;
     readonly emailInput: Locator;
 
     // Files
@@ -48,11 +50,11 @@ export class ServiceCasePage {
 
         this.ticketNameInput = page.locator('#ticketName');
         this.deviceTypeTrigger = page.getByRole('combobox').filter({ hasText: 'Select a device type' });
-        this.affectedAssetTrigger = page.getByRole('combobox').filter({ hasText: 'Search asset by serial number' });
+        this.affectedAssetInput = page.locator('#affectedAsset');
         this.descriptionInput = page.locator('textarea[name="description"]');
 
         this.nameInput = page.locator('#fullName');
-        this.companyTrigger = page.getByRole('combobox').filter({ hasText: 'Search company' });
+        this.companyNameInput = page.locator('#companyName');
         this.emailInput = page.locator('#email');
 
         this.fileInput = page.locator('#file-upload-files');
@@ -66,8 +68,13 @@ export class ServiceCasePage {
         return process.env.FORM_BASE_URL || 'https://qa.form.msupport.am';
     }
 
+    /** Query string that configures the embed: prefilled, locked company name. */
+    private static get formQuery(): string {
+        return 'lng=en&companyName=One+Click+Metal&hostTheme=mone&hostName=QA+MONE&isCompanyNameEditable=false';
+    }
+
     async goto() {
-        await this.page.goto(`${ServiceCasePage.formBaseUrl}/ticket-form`, {
+        await this.page.goto(`${ServiceCasePage.formBaseUrl}/service-case?${ServiceCasePage.formQuery}`, {
             waitUntil: 'domcontentloaded',
             timeout: GOTO_TIMEOUT,
         });
@@ -117,7 +124,7 @@ export class ServiceCasePage {
 
     /** Affected Asset only becomes enabled after a Device Type is chosen. */
     async expectAffectedAssetDisabled() {
-        await expect(this.affectedAssetTrigger).toBeDisabled();
+        await expect(this.affectedAssetInput).toBeDisabled();
     }
 
     /** Once a device type is selected the Affected Asset field is mandatory (red *). */
@@ -126,11 +133,18 @@ export class ServiceCasePage {
         await expect(group.getByText('*')).toBeVisible();
     }
 
-    async selectAffectedAsset(serial: string) {
-        await this.affectedAssetTrigger.click();
-        const search = this.page.getByPlaceholder('Search asset by serial number...');
-        await search.fill(serial);
-        await this.page.getByRole('option', { name: serial, exact: true }).click();
+    /** Types the affected asset serial number into the (now plain) textbox. */
+    async fillAffectedAsset(serial: string) {
+        await this.affectedAssetInput.fill(serial);
+    }
+
+    /**
+     * Enters a serial that does not match the selected device family and blurs it
+     * to surface the prefix validation error.
+     */
+    async fillAffectedAssetAndBlur(serial: string) {
+        await this.affectedAssetInput.fill(serial);
+        await this.affectedAssetInput.blur();
     }
 
     // ---------------------------------------------------------------- contact info
@@ -156,15 +170,10 @@ export class ServiceCasePage {
         await this.emailInput.blur();
     }
 
-    /**
-     * Selects a company. `search` is typed into the filter; `optionName`
-     * (defaults to `search`) is the exact option label to click.
-     */
-    async selectCompany(search: string, optionName: string = search) {
-        await this.companyTrigger.click();
-        const input = this.page.getByPlaceholder('Search company...');
-        await input.fill(search);
-        await this.page.getByRole('option', { name: optionName, exact: true }).click();
+    /** The company name is prefilled from the URL and cannot be edited. */
+    async expectCompanyPrefilledAndLocked(companyName: string) {
+        await expect(this.companyNameInput).toHaveValue(companyName);
+        await expect(this.companyNameInput).toBeDisabled();
     }
 
     // ---------------------------------------------------------------- files
@@ -234,15 +243,28 @@ export class ServiceCasePage {
         await expect(this.page.getByText(message).first()).toBeVisible({ timeout: DEFAULT_TIMEOUT });
     }
 
+    /** The submit-time authorization error shown when an unauthorized email is used. */
+    async expectEmailNotAuthorized() {
+        await this.expectFieldError(
+            'This email address is not authorized to create a service case. Use an email from your company domain or an MSupport user email.',
+        );
+        await expect(this.page).toHaveURL(/\/service-case\?/);
+    }
+
+    /** The client-side prefix validation error for an asset that does not match the device family. */
+    async expectAffectedAssetPrefixError(prefix: string) {
+        await this.expectFieldError(`Serial number must start with ${prefix} for the selected device type.`);
+    }
+
     /**
-     * Verifies the /ticket-created confirmation page and returns the generated
-     * Service Case reference (Ticket ID) shown to the user.
+     * Verifies the /service-case-created confirmation page and returns the
+     * generated Service Case reference (Ticket ID, e.g. "TM-11208").
      */
     async expectSubmissionConfirmed(email: string): Promise<string> {
-        await expect(this.page).toHaveURL(/\/ticket-created\?/, { timeout: 20_000 });
+        await expect(this.page).toHaveURL(/\/service-case-created\?/, { timeout: 20_000 });
         await expect(this.page.getByRole('heading', { name: 'Support Ticket Created' })).toBeVisible();
 
-        const ticketIdLine = this.page.getByText(/Ticket ID:\s*\d+/);
+        const ticketIdLine = this.page.getByText(/Ticket ID:\s*\S+/);
         await expect(ticketIdLine).toBeVisible();
 
         await expect(this.page.getByText('Track Progress')).toBeVisible();
@@ -252,6 +274,6 @@ export class ServiceCasePage {
         await expect(this.page.getByRole('button', { name: 'Create New Support Ticket' })).toBeVisible();
 
         const text = (await ticketIdLine.textContent()) ?? '';
-        return text.replace(/\D/g, '');
+        return text.replace(/Ticket ID:\s*/i, '').trim();
     }
 }
