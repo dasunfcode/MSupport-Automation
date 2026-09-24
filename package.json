@@ -5,6 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "auth": "playwright test --project=setup",
+    "test:ci:setup": "playwright test --project=setup",
+    "test:ci:assetlogs": "playwright test --project=assetlogs --no-deps",
+    "test:ci:main": "playwright test --project=chromium --project=serviceform --project=servicetracking --no-deps",
     "mcp": "npx @playwright/mcp@latest --browser chrome --storage-state auth.json --ignore-https-errors --viewport-size 1280,720 --output-dir test-results/mcp"
   },
   "keywords": [],
