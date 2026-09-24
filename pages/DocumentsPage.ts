@@ -166,9 +166,9 @@ export class DocumentsPage {
 
         const timestamps: number[] = [];
         for (let i = 0; i < count; i++) {
-            const raw = (
-                await this.bodyRows.nth(i).locator('td').nth(UPDATED_CELL_INDEX).innerText()
-            ).trim();
+            const cell = this.bodyRows.nth(i).locator('td').nth(UPDATED_CELL_INDEX);
+            await expect(cell).not.toHaveText('');
+            const raw = (await cell.innerText()).trim();
             const parsed = Date.parse(raw.replace(' ', 'T'));
             expect(Number.isNaN(parsed), `Unparseable Updated value: "${raw}"`).toBe(false);
             timestamps.push(parsed);
