@@ -63,14 +63,14 @@ export class ServiceCasePage {
         this.submitButton = page.getByTestId('ticket-submit-button');
     }
 
-    /** Base URL of the public form host (overridable via FORM_BASE_URL). */
+    /** Base URL of the public form host (from FORM_BASE_URL). */
     private static get formBaseUrl(): string {
-        return process.env.FORM_BASE_URL || 'https://qa.form.msupport.am';
+        return process.env.FORM_BASE_URL!;
     }
 
-    /** Query string that configures the embed: prefilled, locked company name. */
+    /** Query string that configures the embed (from SERVICE_CASE_FORM_QUERY). */
     private static get formQuery(): string {
-        return 'lng=en&companyName=One+Click+Metal&hostTheme=mone&hostName=QA+MONE&isCompanyNameEditable=false';
+        return process.env.SERVICE_CASE_FORM_QUERY!;
     }
 
     async goto() {

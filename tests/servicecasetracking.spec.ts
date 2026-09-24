@@ -2,11 +2,9 @@ import path from 'path';
 import { test, expect } from '../fixtures/fixtures';
 
 // ==================== EASY-TO-CHANGE TEST DATA ====================
-// A valid tracking link generated during Service Case creation. Override via env.
-const CASE_ID = process.env.TRACKING_CASE_ID || 'a05338dc-bed3-4b8a-8bff-7ce1c9ea5365';
-const TOKEN =
-    process.env.TRACKING_TOKEN ||
-    'FD16Aj7mfdWmjI5mlwg860Q4zOKiF7O635Jj1AUA3zh6Mrr5OcWqWCXwsr7q67WHvUgdsGsCGuilDMdZWCAnwvnqQIXvbrYB0w35z65LMgY2KClGjcsUVpRkmtZj5YkM';
+// A valid tracking link generated during Service Case creation (from env).
+const CASE_ID = process.env.TRACKING_CASE_ID!;
+const TOKEN = process.env.TRACKING_TOKEN!;
 
 // Requester details associated with the Service Case (from the Contact panel).
 const CONTACT_NAME = 'QA Automation';
