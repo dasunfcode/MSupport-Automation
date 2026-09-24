@@ -199,7 +199,7 @@ export class SupportHubPage {
             this.page.context().waitForEvent('page'),
             card.getByRole('button', { name: /^Open PDF/ }).click(),
         ]);
-        await popup.waitForLoadState('domcontentloaded');
+        // PDF popups don't reliably fire domcontentloaded in headless; toHaveURL polls the URL directly.
         await expect(popup).toHaveURL(/#page=\d+/);
         return popup;
     }
