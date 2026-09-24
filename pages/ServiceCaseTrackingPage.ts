@@ -70,9 +70,9 @@ export class ServiceCaseTrackingPage {
         this.goBackButton = page.getByRole('button', { name: 'Go Back' });
     }
 
-    /** Base URL of the public form host (overridable via FORM_BASE_URL). */
+    /** Base URL of the public form host (from FORM_BASE_URL). */
     private static get formBaseUrl(): string {
-        return process.env.FORM_BASE_URL || 'https://qa.form.msupport.am';
+        return process.env.FORM_BASE_URL!;
     }
 
     static trackingUrl(caseId: string, token: string): string {

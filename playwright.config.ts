@@ -28,7 +28,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL,
 
-    headless: false, // change to true in CI
+    headless: !!process.env.CI, // headless in CI, headed locally
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
 
