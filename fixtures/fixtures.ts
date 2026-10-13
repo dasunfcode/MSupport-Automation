@@ -12,6 +12,7 @@ import { ServiceCasePage } from '../pages/ServiceCasePage';
 import { ServiceCaseTrackingPage } from '../pages/ServiceCaseTrackingPage';
 import { SupportHubPage } from '../pages/SupportHubPage';
 import { DashboardPage } from '../pages/DashboardPage';
+import { ErrorCodesPage } from '../pages/ErrorCodesPage';
 
 type Credentials = { email: string; password: string };
 
@@ -32,6 +33,8 @@ type TestFixtures = {
     serviceCaseTrackingPage: ServiceCaseTrackingPage;
     supportHubPage: SupportHubPage;
     dashboardPage: DashboardPage;
+    errorCodesPage: ErrorCodesPage;
+    ticketPage: TicketPage;
 };
 
 async function loginAs(browser: Browser, email: string, password: string): Promise<Page> {
@@ -99,6 +102,18 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
         const dashboardPage = new DashboardPage(page);
         await dashboardPage.goto();
         await use(dashboardPage);
+    },
+
+    errorCodesPage: async ({ page }, use) => {
+        const errorCodesPage = new ErrorCodesPage(page);
+        await errorCodesPage.goto();
+        await use(errorCodesPage);
+    },
+
+    ticketPage: async ({ page }, use) => {
+        const ticketPage = new TicketPage(page);
+        await ticketPage.goto();
+        await use(ticketPage);
     },
 
     assetsLiveData: [

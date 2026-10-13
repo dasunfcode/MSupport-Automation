@@ -6,6 +6,7 @@
       "args": [
         "@playwright/mcp@latest",
         "--browser", "chrome",
+        "--isolated",
         "--storage-state", "auth.json",
         "--ignore-https-errors",
         "--viewport-size", "1280,720",
