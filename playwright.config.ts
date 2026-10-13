@@ -73,6 +73,8 @@ export default defineConfig({
       testIgnore: [/assetlogs\.test\.ts/, /servicecase\.spec\.ts/, /servicecasetracking\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
+        // New headless mode: the default headless shell has no PDF viewer, so PDF popups stay on about:blank.
+        channel: 'chromium',
         storageState: process.env.AUTH_JSON_PATH || 'auth.json',
       },
       dependencies: ['setup', 'assetlogs'],
