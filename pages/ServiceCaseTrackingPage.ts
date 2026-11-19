@@ -66,7 +66,7 @@ export class ServiceCaseTrackingPage {
         this.uploadZone = page.getByText('Drag and Drop or Click Here to upload files');
         this.submitButton = page.getByRole('button', { name: 'Submit' });
 
-        this.loadError = page.getByText('Failed to load service case details');
+        this.loadError = page.getByText('Ticket not found. The link may have been revoked or the ticket deleted.');
         this.goBackButton = page.getByRole('button', { name: 'Go Back' });
     }
 

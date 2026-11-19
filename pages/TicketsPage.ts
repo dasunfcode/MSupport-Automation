@@ -38,9 +38,9 @@ export class TicketPage {
   readonly noErrorCodesFound: Locator;
   constructor(readonly page: Page) {
     this.addTicketButton = page.getByText('Add a Ticket');
-    this.nameInput = page.getByLabel('Name');
-    this.ticketTypeSection = page.locator('text=Select Ticket Type').locator('..');
-    this.classifySection = page.locator('text=Classify Issue').locator('..');
+    this.nameInput = page.getByLabel('Subject');
+    this.ticketTypeSection = page.getByRole('radiogroup').filter({ has: page.getByTestId(/^ticket-type-/) });
+    this.classifySection = page.getByRole('radiogroup').filter({ has: page.getByTestId(/^ticket-classification-/) });
     this.deviceTypeButton = page.getByRole('combobox').filter({ hasText: 'Select device type' });
     this.selectAssetButton = page.getByText('Select asset', { exact: true });
     this.escalateButton = page.locator('.peer.h-4');
@@ -48,7 +48,7 @@ export class TicketPage {
     this.createButton = page.getByRole('button', { name: 'Create Ticket' });
     this.updateButton = page.getByRole('button', { name: 'Update Ticket' });
     this.confirmDeleteButton = page.getByRole('button', { name: 'Confirm & Delete' });
-    this.searchInput = page.getByPlaceholder('Search by Ticket ID, Name, Type...');
+    this.searchInput = page.getByPlaceholder('Search by Ticket ID, Subject, Type...');
     this.updateRow = page.getByRole('cell', { name: 'Test Ticket' });
     this.editButton = page.getByRole('button', { name: 'edit', exact: true });
     this.closeButton = page.getByRole('button', { name: 'Close', exact: true });
@@ -90,26 +90,22 @@ export class TicketPage {
     const dropdown = this.page.locator('[role="menu"]').first();
     const menuItem = dropdown.getByRole('menuitem', { name: menuItemName });
 
+    // The item click is retried too: a table re-render detaches the open menu.
     await expect(async () => {
       if (!(await dropdown.isVisible())) {
         await menuButton.click();
       }
       await expect(menuItem).toBeVisible({ timeout: 2000 });
+      await menuItem.click({ timeout: 2000 });
+      await expect(dropdown).toBeHidden({ timeout: 2000 });
     }).toPass({ timeout: MENU_OPEN_TIMEOUT, intervals: [250, 500, 1000] });
-
-    await menuItem.click();
-
-    if (await dropdown.isVisible().catch(() => false)) {
-      await menuItem.click({ force: true });
-    }
-    await expect(dropdown).toBeHidden({ timeout: 5_000 });
   }
 
   async addTicket(name: string, adminType: string, errorCode?: string | true): Promise<string | undefined> {
     await this.openAddTicketForm();
     await this.nameInput.fill(name);
-    await this.ticketTypeSection.getByText('Problem', { exact: true }).click();
-    await this.classifySection.getByText('Failure Without Downtime', { exact: true }).click();
+    await this.ticketTypeSection.getByTestId('ticket-type-problem').click();
+    await this.classifySection.getByTestId('ticket-classification-failure_without_downtime').click();
 
     // The asset selector is disabled until a device type is chosen.
     await this.deviceTypeButton.click();
@@ -162,8 +158,23 @@ export class TicketPage {
     await expect(this.assignDialog).toBeHidden();
   }
 
+  /**
+   * Type a search term and wait until the list shows its results. The input
+   * is debounced, so without waiting the previous (unfiltered) list would
+   * still be on screen when the results are checked.
+   */
   async searchErrorCodes(term: string) {
+    const results = this.page.waitForResponse(
+      r => /\/error-codes\/options\?/.test(r.url()) && new URL(r.url()).searchParams.get('query') === term.trim(),
+      { timeout: DEFAULT_TIMEOUT },
+    );
     await this.assignSearchInput.fill(term);
+    expect((await results).ok(), `Error code search for "${term}" should succeed`).toBeTruthy();
+  }
+
+  /** Text of every listed option, read in one pass so a re-render cannot leave stale handles. */
+  private async optionTexts(): Promise<string[]> {
+    return this.errorCodeOptions.evaluateAll(els => els.map(el => (el as HTMLElement).innerText));
   }
 
   errorCodeOption(code: string): Locator {
@@ -181,8 +192,7 @@ export class TicketPage {
   }
 
   async listedCodes(): Promise<string[]> {
-    const options = await this.errorCodeOptions.all();
-    return Promise.all(options.map(async option => (await this.readOption(option)).code));
+    return (await this.optionTexts()).map(text => text.split('\n').map(line => line.trim()).filter(Boolean)[0] ?? '');
   }
 
   async expectAllListedCodesStartWith(prefix: string) {
@@ -195,11 +205,11 @@ export class TicketPage {
   // Every listed option must contain the term (code, description or faulty part).
   async expectAllResultsContain(term: string) {
     await expect(this.errorCodeOptions.first()).toBeVisible();
-    await expect(async () => {
-      for (const option of await this.errorCodeOptions.all()) {
-        expect((await option.innerText()).toLowerCase()).toContain(term.toLowerCase());
-      }
-    }).toPass({ timeout: DEFAULT_TIMEOUT });
+    // Polled: the results render right after the search response arrives.
+    await expect.poll(
+      async () => (await this.optionTexts()).filter(text => !text.toLowerCase().includes(term.toLowerCase())),
+      { message: `Every listed error code should contain "${term}"`, timeout: DEFAULT_TIMEOUT },
+    ).toEqual([]);
   }
 
   async expectErrorCodeNotListed(code: string) {
@@ -255,8 +265,13 @@ export class TicketPage {
     await expect(this.page.getByRole('dialog').getByText(code, { exact: true })).toBeVisible();
   }
 
+  // Waits for the filtered list to settle (no non-matching rows left) so callers
+  // don't act on a row that is about to be re-rendered.
   async searchTicket(name: string): Promise<Locator> {
     await this.searchInput.fill(name);
+    await expect(this.page.locator('tbody tr').filter({ hasNotText: name })).toHaveCount(0, {
+      timeout: DEFAULT_TIMEOUT,
+    });
     return this.ticketRow(name);
   }
 

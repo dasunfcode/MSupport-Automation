@@ -13,6 +13,10 @@ import { ServiceCaseTrackingPage } from '../pages/ServiceCaseTrackingPage';
 import { SupportHubPage } from '../pages/SupportHubPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { ErrorCodesPage } from '../pages/ErrorCodesPage';
+import { InstallationReportDialog } from '../pages/InstallationReportDialog';
+import { InstallationReportUploadDialog } from '../pages/InstallationReportUploadDialog';
+import { CommissioningChecklistDialog } from '../pages/CommissioningChecklistDialog';
+import { CommissioningChecklistUploadDialog } from '../pages/CommissioningChecklistUploadDialog';
 
 type Credentials = { email: string; password: string };
 
@@ -35,6 +39,10 @@ type TestFixtures = {
     dashboardPage: DashboardPage;
     errorCodesPage: ErrorCodesPage;
     ticketPage: TicketPage;
+    installationReport: InstallationReportDialog;
+    installationReportUpload: InstallationReportUploadDialog;
+    commissioningChecklist: CommissioningChecklistDialog;
+    commissioningChecklistUpload: CommissioningChecklistUploadDialog;
 };
 
 async function loginAs(browser: Browser, email: string, password: string): Promise<Page> {
@@ -114,6 +122,22 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
         const ticketPage = new TicketPage(page);
         await ticketPage.goto();
         await use(ticketPage);
+    },
+
+    installationReport: async ({ page }, use) => {
+        await use(new InstallationReportDialog(page));
+    },
+
+    installationReportUpload: async ({ page }, use) => {
+        await use(new InstallationReportUploadDialog(page));
+    },
+
+    commissioningChecklist: async ({ page }, use) => {
+        await use(new CommissioningChecklistDialog(page));
+    },
+
+    commissioningChecklistUpload: async ({ page }, use) => {
+        await use(new CommissioningChecklistUploadDialog(page));
     },
 
     assetsLiveData: [

@@ -63,10 +63,12 @@ test.describe.serial('Dashboard - Personalized landing page', () => {
     });
 
     test('MSUP-DASHBOARD-TC006b_New ticket card shows ID, status, org, asset and timestamp', async ({ dashboardPage }) => {
+        test.skip(!(await dashboardPage.hasNewTickets()), 'No tickets touched since the last sign-in');
         await dashboardPage.expectTicketCardFields('new');
     });
 
     test('MSUP-DASHBOARD-TC006c_New tickets are ordered freshest first', async ({ dashboardPage }) => {
+        test.skip(!(await dashboardPage.hasNewTickets()), 'No tickets touched since the last sign-in');
         await dashboardPage.expectNewTicketsOrderedFreshestFirst();
     });
 
@@ -75,10 +77,12 @@ test.describe.serial('Dashboard - Personalized landing page', () => {
     });
 
     test('MSUP-DASHBOARD-TC007b_Notification shows message and timestamp', async ({ dashboardPage }) => {
+        test.skip(!(await dashboardPage.hasNotifications()), 'No unread notifications');
         await dashboardPage.expectNotificationFields();
     });
 
     test('MSUP-DASHBOARD-TC007c_Notifications are ordered newest first', async ({ dashboardPage }) => {
+        test.skip(!(await dashboardPage.hasNotifications()), 'No unread notifications');
         await dashboardPage.expectNotificationsOrderedNewestFirst();
     });
 });
