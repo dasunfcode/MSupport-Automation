@@ -80,6 +80,8 @@ test.describe.serial('Support Hub - Centralized documentation access', () => {
     });
 
     test('MSUP-SUPPORTHUB-TC003b_Preview modal displays the document preview pane with page navigation', async ({ supportHubPage }) => {
+        // The preview waits for the full (~10 MB) PDF download.
+        test.slow();
         await supportHubPage.openCard(0);
         await supportHubPage.expectPreviewPdfPaneVisible();
         expect(await supportHubPage.getPreviewPdfPage()).toBe(1);
@@ -87,6 +89,7 @@ test.describe.serial('Support Hub - Centralized documentation access', () => {
     });
 
     test('MSUP-SUPPORTHUB-TC003c_PDF navigation buttons move between pages', async ({ supportHubPage }) => {
+        test.slow();
         await supportHubPage.openCard(0);
         await supportHubPage.goToNextPreviewPdfPage();
         expect(await supportHubPage.getPreviewPdfPage()).toBe(2);

@@ -33,8 +33,12 @@ const SUPPORTED_FILE_NAME = 'sample.html';
 const UNSUPPORTED_FILE = path.resolve(__dirname, '../data/uploads/unsupported.txt');
 const UNSUPPORTED_FILE_NAME = 'unsupported.txt';
 
+// Uploads go to external object storage, retried up to 3 x 10 s (see ServiceCasePage).
+const UPLOAD_TEST_TIMEOUT = 90_000;
+
 test.describe.serial('MSUP Service Case - Create Service Case (public ticket form)', () => {
     test('MSUP-SERVICECASE-TC001a_Create Service Case with attachment', async ({ serviceCasePage }) => {
+        test.setTimeout(UPLOAD_TEST_TIMEOUT);
         await serviceCasePage.selectTicketType('Problem');
         await serviceCasePage.fillTicketName(TICKET_NAME);
         await serviceCasePage.selectDeviceType(DEVICE_TYPE);
@@ -46,8 +50,7 @@ test.describe.serial('MSUP Service Case - Create Service Case (public ticket for
         await serviceCasePage.fillEmail(CONTACT_EMAIL);
 
         // Attach a supporting file and classify it before submitting.
-        await serviceCasePage.uploadFiles(SUPPORTED_FILE);
-        await serviceCasePage.expectFileUploaded(SUPPORTED_FILE_NAME);
+        await serviceCasePage.uploadFileAndExpectListed(SUPPORTED_FILE);
         await serviceCasePage.setDocumentTag(SUPPORTED_FILE_NAME, 'Faulty Part');
 
         await serviceCasePage.expectSubmitEnabled();
@@ -83,9 +86,9 @@ test.describe.serial('MSUP Service Case - Create Service Case (public ticket for
         // With an empty form the Submit button stays disabled.
         await serviceCasePage.expectSubmitDisabled();
 
-        // Touching then clearing the Ticket Name surfaces the required error.
+        // Touching then clearing the Ticket Subject surfaces the required error.
         await serviceCasePage.touchAndClearTicketName();
-        await serviceCasePage.expectFieldError('Ticket name is required.');
+        await serviceCasePage.expectFieldError('Ticket subject is required.');
     });
 
     test('MSUP-SERVICECASE-TC006a_Invalid email format is rejected', async ({ serviceCasePage }) => {
@@ -125,8 +128,8 @@ test.describe.serial('MSUP Service Case - Create Service Case (public ticket for
     });
 
     test('MSUP-SERVICECASE-TC008a_Manage and remove uploaded file', async ({ serviceCasePage }) => {
-        await serviceCasePage.uploadFiles(SUPPORTED_FILE);
-        await serviceCasePage.expectFileUploaded(SUPPORTED_FILE_NAME);
+        test.setTimeout(UPLOAD_TEST_TIMEOUT);
+        await serviceCasePage.uploadFileAndExpectListed(SUPPORTED_FILE);
 
         // The document tag can be changed before submission...
         await serviceCasePage.setDocumentTag(SUPPORTED_FILE_NAME, 'Damage Photo');

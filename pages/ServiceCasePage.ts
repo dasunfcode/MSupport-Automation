@@ -1,7 +1,11 @@
+import path from 'path';
 import { Page, Locator, expect } from '@playwright/test';
 
 const GOTO_TIMEOUT = 60_000;
 const DEFAULT_TIMEOUT = 10_000;
+const STORAGE_UPLOAD_TIMEOUT = 10_000;
+const STORAGE_UPLOAD_ATTEMPTS = 3;
+const FILE_LISTED_TIMEOUT = STORAGE_UPLOAD_TIMEOUT * STORAGE_UPLOAD_ATTEMPTS + 10_000;
 
 /** Ticket type options offered on the Create Service Case form. */
 export type ServiceCaseType = 'Problem' | 'Feedback' | 'Question' | 'Request' | 'Other';
@@ -73,7 +77,37 @@ export class ServiceCasePage {
         return process.env.SERVICE_CASE_FORM_QUERY!;
     }
 
+    /**
+     * Files go straight from the browser to S3-compatible object storage via a
+     * presigned PUT. The app sets no timeout on that request, so one stalled
+     * connection leaves the row on "Uploading..." forever. The PUT is
+     * therefore sent through Playwright with a per-attempt timeout and retried
+     * (the presigned URL stays valid), and the real storage response is handed
+     * back to the page. The file still really lands in storage.
+     */
+    private async makeStorageUploadsResilient() {
+        await this.page.route(
+            url => url.searchParams.has('X-Amz-Signature'),
+            async route => {
+                if (route.request().method() !== 'PUT') return route.continue();
+                let lastError: unknown;
+                for (let attempt = 1; attempt <= STORAGE_UPLOAD_ATTEMPTS; attempt++) {
+                    try {
+                        const response = await route.fetch({ timeout: STORAGE_UPLOAD_TIMEOUT });
+                        if (response.status() < 500) return route.fulfill({ response });
+                        lastError = new Error(`Storage answered ${response.status()}`);
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+                console.warn(`Storage upload failed after ${STORAGE_UPLOAD_ATTEMPTS} attempts: ${lastError}`);
+                await route.abort('timedout');
+            },
+        );
+    }
+
     async goto() {
+        await this.makeStorageUploadsResilient();
         await this.page.goto(`${ServiceCasePage.formBaseUrl}/service-case?${ServiceCasePage.formQuery}`, {
             waitUntil: 'domcontentloaded',
             timeout: GOTO_TIMEOUT,
@@ -157,7 +191,7 @@ export class ServiceCasePage {
         await this.emailInput.fill(email);
     }
 
-    /** Enters then clears the Ticket Name and blurs it to surface the required error. */
+    /** Enters then clears the Ticket Subject and blurs it to surface the required error. */
     async touchAndClearTicketName() {
         await this.ticketNameInput.fill('temp');
         await this.ticketNameInput.fill('');
@@ -181,6 +215,28 @@ export class ServiceCasePage {
     /** Uploads one or more files via the hidden multiple file input. */
     async uploadFiles(paths: string | string[]) {
         await this.fileInput.setInputFiles(paths);
+    }
+
+    /**
+     * Uploads a supported file and waits for it to be listed.
+     *
+     * On a slow load the input can receive the file before the form hydrates,
+     * dropping the change event; only then (no row and no "Uploading..."
+     * state) is the file re-sent. While an upload is in flight it is never
+     * re-sent: the form ignores it, and the storage PUT is retried by
+     * `makeStorageUploadsResilient` instead.
+     */
+    async uploadFileAndExpectListed(filePath: string) {
+        const fileName = path.basename(filePath);
+        const tag = this.page.getByRole('combobox', { name: `Tag for ${fileName}` });
+        const uploading = this.page.getByText('Uploading...', { exact: true });
+        await expect(async () => {
+            if ((await tag.count()) === 0 && (await uploading.count()) === 0) {
+                await this.fileInput.setInputFiles(filePath);
+            }
+            await expect(tag).toBeVisible({ timeout: 5_000 });
+        }).toPass({ timeout: FILE_LISTED_TIMEOUT, intervals: [1_000] });
+        await this.expectFileUploaded(fileName);
     }
 
     /** The uploaded-file row, located by its filename plus its per-file tag combobox. */

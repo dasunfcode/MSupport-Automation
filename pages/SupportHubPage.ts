@@ -2,6 +2,9 @@ import { Page, Locator, Download, expect } from '@playwright/test';
 
 const GOTO_TIMEOUT = 60_000;
 const DEFAULT_TIMEOUT = 10_000;
+// The preview pane only renders once the whole PDF has downloaded; the hub's
+// manuals are ~10 MB, which can take well over a minute from object storage.
+const PDF_LOAD_TIMEOUT = 150_000;
 
 // Filter chips render only for values that have at least one matching document,
 // so keys map to the app's stable data-testid suffixes, e.g.
@@ -22,6 +25,7 @@ type FilterDimension = 'category' | 'product' | 'lang' | 'type';
 export class SupportHubPage {
     readonly page: Page;
     readonly navLink: Locator;
+    readonly pageTitle: Locator;
     readonly heading: Locator;
     readonly subHeading: Locator;
     readonly searchInput: Locator;
@@ -60,6 +64,7 @@ export class SupportHubPage {
     constructor(page: Page) {
         this.page = page;
         this.navLink = page.getByRole('link', { name: 'Support Hub' });
+        this.pageTitle = page.getByRole('heading', { name: 'Support Hub', exact: true, level: 1 });
         this.heading = page.getByRole('heading', {
             name: 'Ask a question or search for documentation',
             level: 1,
@@ -128,10 +133,11 @@ export class SupportHubPage {
         await this.heading.waitFor({ state: 'visible', timeout: DEFAULT_TIMEOUT });
     }
 
-    // The app keeps a single browser tab title ("MSupport") across pages;
-    // there is no on-page "Support Hub" heading, so we assert on the tab title.
+    // The app keeps a single browser tab title ("MSupport") across pages, so the
+    // page is identified by its on-page "Support Hub" heading.
     async expectPageTitleVisible() {
         await expect(this.page).toHaveTitle('MSupport');
+        await expect(this.pageTitle).toBeVisible();
     }
 
     async expectHeadingVisible() {
@@ -373,7 +379,7 @@ export class SupportHubPage {
 
     // Verifies the document preview pane renders with working pagination controls.
     async expectPreviewPdfPaneVisible() {
-        await expect(this.previewPdfPageIndicator).toBeVisible();
+        await expect(this.previewPdfPageIndicator).toBeVisible({ timeout: PDF_LOAD_TIMEOUT });
         await expect(this.previewPdfPageIndicator).toHaveText(/^\d+ \/ \d+$/);
         await expect(this.previewPdfPrevButton).toBeVisible();
         await expect(this.previewPdfNextButton).toBeVisible();
@@ -386,6 +392,7 @@ export class SupportHubPage {
 
     // Navigates the preview PDF pane forward and asserts the page counter advanced.
     async goToNextPreviewPdfPage() {
+        await expect(this.previewPdfPageIndicator).toBeVisible({ timeout: PDF_LOAD_TIMEOUT });
         const before = await this.getPreviewPdfPage();
         await this.previewPdfNextButton.click();
         await expect
