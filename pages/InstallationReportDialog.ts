@@ -426,6 +426,21 @@ export class InstallationReportDialog {
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });
     }
 
+    /**
+     * Click `button` and wait until the POST to `endpoint` is sent. Filing and
+     * Send Request first upload the report PDF to file storage, which can take a
+     * while on QA, so a toast or other result only shows up after that.
+     */
+    async clickAndAwaitRequest(button: Locator, endpoint: keyof typeof API) {
+        const sent = this.page.waitForRequest(r => API[endpoint].test(r.url()) && r.method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
+        await button.click();
+        await sent;
+    }
+
+    async sendSignatureRequest() {
+        await this.clickAndAwaitRequest(this.sendRequestButton, 'signatureRequest');
+    }
+
     async closeWithX() {
         await this.closeButton.click();
     }
