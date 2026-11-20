@@ -3,8 +3,8 @@ import { Page, Locator, expect } from '@playwright/test';
 
 const GOTO_TIMEOUT = 60_000;
 const DEFAULT_TIMEOUT = 10_000;
-const STORAGE_UPLOAD_TIMEOUT = 10_000;
-const STORAGE_UPLOAD_ATTEMPTS = 3;
+const STORAGE_UPLOAD_TIMEOUT = 30_000; // a normal upload to QA storage has taken 14 s
+const STORAGE_UPLOAD_ATTEMPTS = 2;
 const FILE_LISTED_TIMEOUT = STORAGE_UPLOAD_TIMEOUT * STORAGE_UPLOAD_ATTEMPTS + 10_000;
 
 /** Ticket type options offered on the Create Service Case form. */

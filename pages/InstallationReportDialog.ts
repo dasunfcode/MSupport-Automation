@@ -1,6 +1,8 @@
 import { Page, Locator, Request, expect } from '@playwright/test';
 
 const DEFAULT_TIMEOUT = 15_000;
+// Uploading and filing go through QA file storage; the server alone has taken 30 s+ to answer.
+const STORAGE_RESPONSE_TIMEOUT = 90_000;
 
 // ---- Template content (paper form 2024_01_Installation_Report_OCM) ----------
 
@@ -418,10 +420,25 @@ export class InstallationReportDialog {
 
     async fileReport() {
         await expect(this.completeButton).toBeEnabled({ timeout: DEFAULT_TIMEOUT });
-        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST');
+        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.completeButton.click();
         expect((await response).ok(), 'Complete and file request should succeed').toBeTruthy();
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });
+    }
+
+    /**
+     * Click `button` and wait until the POST to `endpoint` is sent. Filing and
+     * Send Request first upload the report PDF to file storage, which can take a
+     * while on QA, so a toast or other result only shows up after that.
+     */
+    async clickAndAwaitRequest(button: Locator, endpoint: keyof typeof API) {
+        const sent = this.page.waitForRequest(r => API[endpoint].test(r.url()) && r.method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
+        await button.click();
+        await sent;
+    }
+
+    async sendSignatureRequest() {
+        await this.clickAndAwaitRequest(this.sendRequestButton, 'signatureRequest');
     }
 
     async closeWithX() {

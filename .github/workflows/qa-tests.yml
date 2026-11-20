@@ -9,7 +9,9 @@ on:
 jobs:
   test:
     name: Run Playwright suite
-    runs-on: ubuntu-latest
+    # Pinned: Playwright only supports the Ubuntu versions it was built against, and
+    # `ubuntu-latest` moves to new releases before Playwright supports them.
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
       CI: true

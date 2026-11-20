@@ -41,6 +41,8 @@ async function resetTestAsset(browser: Browser) {
 }
 
 test.describe.serial('Installation Report - Online', () => {
+    // Uploading and filing go through QA file storage, which can take 30 s+ per call.
+    test.describe.configure({ timeout: 150_000 });
 
     test.beforeAll(async ({ browser }) => {
         await resetTestAsset(browser);
@@ -254,7 +256,7 @@ test.describe.serial('Installation Report - Online', () => {
 
         // Intercept: the payload is verified but never reaches the mail service.
         const captured = await installationReport.stubNext('signatureRequest', 500);
-        await installationReport.sendRequestButton.click();
+        await installationReport.sendSignatureRequest();
         await installationReport.expectToast();
 
         const body = captured().postDataJSON();
@@ -281,7 +283,7 @@ test.describe.serial('Installation Report - Online', () => {
 
         // Fake a successful send: the UI behaves as on success, but no e-mail goes out.
         const captured = await installationReport.stubNext('signatureRequest', 200, { success: true, data: {} });
-        await installationReport.sendRequestButton.click();
+        await installationReport.sendSignatureRequest();
 
         await installationReport.expectToast('The report was sent to the customer for signature.');
         await expect(installationReport.dialog).toBeHidden();
@@ -346,7 +348,7 @@ test.describe.serial('Installation Report - Online', () => {
         await installationReport.openFormForAsset(assetSerial);
         await installationReport.fillCompleteReport(REPORT);
         await installationReport.failNextWithTimeout('complete');
-        await installationReport.completeButton.click();
+        await installationReport.clickAndAwaitRequest(installationReport.completeButton, 'complete');
         await installationReport.expectToast();
         await expect(installationReport.dialog).toBeVisible();
     });

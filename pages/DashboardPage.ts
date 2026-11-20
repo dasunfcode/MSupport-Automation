@@ -146,10 +146,12 @@ export class DashboardPage {
     }
 
     // Parses a relative "… ago" phrase into an approximate age in minutes so the
-    // ordering of time-sorted lists can be asserted.
+    // ordering of time-sorted lists can be asserted. Only a phrase that ends in
+    // "ago" and starts on a word boundary counts, so digits elsewhere on the card
+    // (an asset such as MPR00001 run together with "35 minutes ago") are ignored.
     private static agoToMinutes(text: string): number | null {
-        const match = text.match(
-            /(\d+|a|an|less than a)\s*(minute|hour|day|week|month|year)/i
+        const match = text.trim().match(
+            /\b(less than a|\d+|an?)\s+(minute|hour|day|week|month|year)s?\s+ago$/i
         );
         if (!match) return null;
         const raw = match[1].toLowerCase();
@@ -167,8 +169,15 @@ export class DashboardPage {
     }
 
     private async agesFor(buttons: Locator): Promise<number[]> {
+        // Read the age element itself; the button's full text runs the asset and
+        // the age together ("MPR00001" + "35 minutes ago" -> "...0000135 minutes ago").
         const names = await buttons.evaluateAll((els) =>
-            els.map((el) => el.getAttribute('aria-label') || el.textContent || '')
+            els.map((el) =>
+                el.querySelector('[data-slot="tooltip-trigger"]')?.textContent ||
+                el.getAttribute('aria-label') ||
+                el.textContent ||
+                ''
+            )
         );
         return names
             .map((n) => DashboardPage.agoToMinutes(n))
