@@ -65,6 +65,8 @@ async function resetTestAsset(browser: Browser) {
 }
 
 test.describe.serial('Commissioning Checklist', () => {
+    // Uploading and filing go through QA file storage, which can take 30 s+ per call.
+    test.describe.configure({ timeout: 150_000 });
 
     let template: ChecklistTemplate;
     let totalPoints: number;
@@ -360,7 +362,7 @@ test.describe.serial('Commissioning Checklist', () => {
     });
 
     test('MSUP-COMMISSIONING-REPORT-TC005d_Complete checklist is only enabled when every point is ticked or n/a', async ({ commissioningChecklist }) => {
-        test.setTimeout(120_000);
+        test.setTimeout(180_000); // ticks all 58 points, then files the checklist
         const last = template.sections.at(-1)!;
         const lastPoint = tickable(last).at(-1)!;
 

@@ -2,6 +2,8 @@ import { Page, Locator, Request, expect } from '@playwright/test';
 import { InstallationReportDialog } from './InstallationReportDialog';
 
 const DEFAULT_TIMEOUT = 15_000;
+// Uploading and filing go through QA file storage; the server alone has taken 30 s+ to answer.
+const STORAGE_RESPONSE_TIMEOUT = 90_000;
 const T = 'commissioning-upload-installation_report';
 
 const UPLOAD_API = /\/commissioning\/installation_report\/upload$/;
@@ -255,14 +257,14 @@ export class InstallationReportUploadDialog {
 
     /** Click "Upload Report" and return the upload request once it is sent. */
     async clickUpload(): Promise<Request> {
-        const request = this.page.waitForRequest(r => UPLOAD_API.test(r.url()) && r.method() === 'POST', { timeout: 30_000 });
+        const request = this.page.waitForRequest(r => UPLOAD_API.test(r.url()) && r.method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.uploadButton.click();
         return request;
     }
 
     /** Upload a first report (no confirmation step). */
     async uploadReport(): Promise<Request> {
-        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: 30_000 });
+        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         const request = await this.clickUpload();
         expect((await response).ok(), 'Upload request should succeed').toBeTruthy();
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });
@@ -284,7 +286,7 @@ export class InstallationReportUploadDialog {
         this.page.off('request', early);
         expect(sentEarly, 'Nothing may be uploaded before the confirmation').toBeFalsy();
 
-        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: 30_000 });
+        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await confirmButton.click();
         const res = await response;
         expect(res.ok(), 'Upload request should succeed').toBeTruthy();
@@ -333,7 +335,7 @@ export class InstallationReportUploadDialog {
         await expect(dialog).toBeVisible({ timeout: DEFAULT_TIMEOUT });
         await dialog.getByTestId('additional-commissioning-documents-upload-picker-dropzone').locator('input[type=file]').setInputFiles(file as any);
 
-        const saved = this.page.waitForResponse(r => /\/additional-commissioning-documents$/.test(r.url()) && r.request().method() === 'POST', { timeout: 30_000 });
+        const saved = this.page.waitForResponse(r => /\/additional-commissioning-documents$/.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await dialog.getByTestId('additional-commissioning-documents-upload-submit').click();
         expect((await saved).ok(), 'Additional document upload should succeed').toBeTruthy();
         await expect(dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });

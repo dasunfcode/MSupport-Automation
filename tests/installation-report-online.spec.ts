@@ -41,6 +41,8 @@ async function resetTestAsset(browser: Browser) {
 }
 
 test.describe.serial('Installation Report - Online', () => {
+    // Uploading and filing go through QA file storage, which can take 30 s+ per call.
+    test.describe.configure({ timeout: 150_000 });
 
     test.beforeAll(async ({ browser }) => {
         await resetTestAsset(browser);

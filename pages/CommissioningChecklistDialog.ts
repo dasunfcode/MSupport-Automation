@@ -2,6 +2,8 @@ import { Page, Locator, expect } from '@playwright/test';
 import { InstallationReportDialog } from './InstallationReportDialog';
 
 const DEFAULT_TIMEOUT = 15_000;
+// Uploading and filing go through QA file storage; the server alone has taken 30 s+ to answer.
+const STORAGE_RESPONSE_TIMEOUT = 90_000;
 const D = 'commissioning-dialog-commissioning_checklist';
 const C = 'commissioning-card-commissioning_checklist';
 
@@ -290,7 +292,7 @@ export class CommissioningChecklistDialog {
 
     async completeChecklist() {
         await expect(this.completeButton).toBeEnabled({ timeout: DEFAULT_TIMEOUT });
-        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST');
+        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.completeButton.click();
         expect((await response).ok(), 'Complete checklist request should succeed').toBeTruthy();
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });

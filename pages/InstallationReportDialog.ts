@@ -1,6 +1,8 @@
 import { Page, Locator, Request, expect } from '@playwright/test';
 
 const DEFAULT_TIMEOUT = 15_000;
+// Uploading and filing go through QA file storage; the server alone has taken 30 s+ to answer.
+const STORAGE_RESPONSE_TIMEOUT = 90_000;
 
 // ---- Template content (paper form 2024_01_Installation_Report_OCM) ----------
 
@@ -418,7 +420,7 @@ export class InstallationReportDialog {
 
     async fileReport() {
         await expect(this.completeButton).toBeEnabled({ timeout: DEFAULT_TIMEOUT });
-        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST');
+        const response = this.page.waitForResponse(r => API.complete.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.completeButton.click();
         expect((await response).ok(), 'Complete and file request should succeed').toBeTruthy();
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });

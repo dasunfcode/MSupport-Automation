@@ -3,6 +3,8 @@ import { CommissioningChecklistDialog } from './CommissioningChecklistDialog';
 import type { UploadFile } from './InstallationReportUploadDialog';
 
 const DEFAULT_TIMEOUT = 15_000;
+// Uploading and filing go through QA file storage; the server alone has taken 30 s+ to answer.
+const STORAGE_RESPONSE_TIMEOUT = 90_000;
 const T = 'commissioning-upload-commissioning_checklist';
 const UPLOAD_API = /\/commissioning\/commissioning_checklist\/upload$/;
 
@@ -108,14 +110,14 @@ export class CommissioningChecklistUploadDialog {
 
     /** Click "Upload checklist" and return the upload request once it is sent. */
     async clickUpload(): Promise<Request> {
-        const request = this.page.waitForRequest(r => UPLOAD_API.test(r.url()) && r.method() === 'POST', { timeout: 30_000 });
+        const request = this.page.waitForRequest(r => UPLOAD_API.test(r.url()) && r.method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.uploadButton.click();
         return request;
     }
 
     /** Upload while no checklist is on file (no confirmation step). */
     async upload(): Promise<Request> {
-        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: 30_000 });
+        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         const request = await this.clickUpload();
         expect((await response).ok(), 'Upload request should succeed').toBeTruthy();
         await expect(this.dialog).toBeHidden({ timeout: DEFAULT_TIMEOUT });
@@ -133,7 +135,7 @@ export class CommissioningChecklistUploadDialog {
         this.page.off('request', early);
         expect(sentEarly, 'Nothing may be uploaded before the confirmation').toBeFalsy();
 
-        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: 30_000 });
+        const response = this.page.waitForResponse(r => UPLOAD_API.test(r.url()) && r.request().method() === 'POST', { timeout: STORAGE_RESPONSE_TIMEOUT });
         await this.replaceButton.click();
         const res = await response;
         expect(res.ok(), 'Upload request should succeed').toBeTruthy();

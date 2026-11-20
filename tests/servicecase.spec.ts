@@ -33,8 +33,8 @@ const SUPPORTED_FILE_NAME = 'sample.html';
 const UNSUPPORTED_FILE = path.resolve(__dirname, '../data/uploads/unsupported.txt');
 const UNSUPPORTED_FILE_NAME = 'unsupported.txt';
 
-// Uploads go to external object storage, retried up to 3 x 10 s (see ServiceCasePage).
-const UPLOAD_TEST_TIMEOUT = 90_000;
+// Uploads go to external object storage, retried up to 2 x 30 s (see ServiceCasePage).
+const UPLOAD_TEST_TIMEOUT = 150_000;
 
 test.describe.serial('MSUP Service Case - Create Service Case (public ticket form)', () => {
     test('MSUP-SERVICECASE-TC001a_Create Service Case with attachment', async ({ serviceCasePage }) => {
